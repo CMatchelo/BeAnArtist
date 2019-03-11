@@ -20,6 +20,11 @@ public class UpgradeBTN : MonoBehaviour
     public bool makeProfit = false;
     public int time=10;
     public int timeDecrease = 3;
+    public int costDecrease = 10;
+    public GameObject decreaseTimeBTN;
+    public GameObject decreaseTimeTXT;
+    public GameObject lockeddecreaseTimeBTN;
+    public GameObject lockeddecreaseTimeTXT;
 
     void Start()
     {
@@ -29,8 +34,11 @@ public class UpgradeBTN : MonoBehaviour
     void Update()
     {
         qtyCoins = GameManager.coinsCount;
-        activeTXT.GetComponent<Text>().text = "Boost post - $" + upgrade_cost;
-        lockedTXT.GetComponent<Text>().text = "Boost post - $" + upgrade_cost;
+        activeTXT.GetComponent<Text>().text             = "Boost post - $" + upgrade_cost;
+        lockedTXT.GetComponent<Text>().text             = "Boost post - $" + upgrade_cost;
+
+        decreaseTimeTXT.GetComponent<Text>().text       = "Sell your art " + timeDecrease + " seconds faster - $" + costDecrease;
+        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art " + timeDecrease + " seconds faster - $" + costDecrease;
 
         if (qtyCoins >= upgrade_cost)
         {
@@ -42,11 +50,22 @@ public class UpgradeBTN : MonoBehaviour
             activeBTN.SetActive(false);
             lockedBTN.SetActive(true);
         }
-
+        // Verifies if art is active
         if (level > 0 && makeProfit == false)
         {
             makeProfit = true;
             StartCoroutine(makeMoney());
+        }
+
+        if (qtyCoins >= costDecrease && time > 1 && makeProfit == true)
+        {
+            decreaseTimeBTN.SetActive(true);
+            lockeddecreaseTimeBTN.SetActive(false);
+        }
+        else
+        {
+            decreaseTimeBTN.SetActive(false);
+            lockeddecreaseTimeBTN.SetActive(true);
         }
     }
     //
@@ -79,12 +98,12 @@ public class UpgradeBTN : MonoBehaviour
     }
     //
     //
-    // Time to profit
-    /*
+    // Decrease time to profit
     public void DecreaseTimeProfit()
     {
         if (time > 1)
         {
+            costDecrease *= 2;
             time -= timeDecrease;
         }
         
@@ -92,6 +111,9 @@ public class UpgradeBTN : MonoBehaviour
         {
             time = 1;
         }
-    }*/
+    }
+    //
+    //
+    // 
 
 }
