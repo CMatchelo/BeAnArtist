@@ -10,7 +10,9 @@ public class MenuManager : MonoBehaviour
     public GameObject store;
     public GameObject settings;
     //public GameObject extra;
-
+    //
+    //
+    // Opens main page
     public void MainClick()
     {
         main.SetActive(true);
@@ -18,7 +20,9 @@ public class MenuManager : MonoBehaviour
         settings.SetActive(false);
         //extra.SetActive(false);
     }
-
+    //
+    //
+    // Opens upgrade page
     public void StoreClick()
     {
         main.SetActive(false);
@@ -26,7 +30,9 @@ public class MenuManager : MonoBehaviour
         settings.SetActive(false);
         //extra.SetActive(false);
     }
-
+    //
+    //
+    // Opens settings page
     public void SettingsClick()
     {
         main.SetActive(false);

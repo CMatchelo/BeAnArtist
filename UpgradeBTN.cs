@@ -9,18 +9,19 @@ using UnityEngine.UI;
 public class UpgradeBTN : MonoBehaviour
 {
     //public GameObject textBox;
+    public int ID;
     public GameObject statusBox;
-    public static int upgrade_cost;
-    public static int level = 0;
+    public int upgrade_cost;
+    public int level;
     public GameObject activeBTN;
     public GameObject activeTXT;
     public GameObject lockedBTN;
     public GameObject lockedTXT;
     public int qtyCoins;
     public bool makeProfit = false;
-    public int time=10;
-    public int timeDecrease = 3;
-    public int costDecrease = 10;
+    public int time;
+    public int timeDecrease;
+    public int costDecrease;
     public GameObject decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
     public GameObject lockeddecreaseTimeBTN;
@@ -28,7 +29,7 @@ public class UpgradeBTN : MonoBehaviour
 
     void Start()
     {
-        upgrade_cost = 10;
+
     }
 
     void Update()
@@ -78,7 +79,7 @@ public class UpgradeBTN : MonoBehaviour
             GameManager.coinsCount -= upgrade_cost;
             upgrade_cost *= 2;
             level++;
-            print("update");
+            print(level);
             GameManager.cps += level;
         }
         else
@@ -93,8 +94,10 @@ public class UpgradeBTN : MonoBehaviour
     IEnumerator makeMoney()
     {
         GameManager.coinsCount += level;
+        print("arte" + ID + " made " + level + " coins");
         yield return new WaitForSeconds(time);
         makeProfit = false;
+
     }
     //
     //
