@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+//using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,19 +10,28 @@ using UnityEngine.UI;
 public class UpgradeBTN : MonoBehaviour
 {
     //public GameObject textBox;
-    public int ID;
+    // upgrade_cost  = initialCost * (coefficient)^owned
+    // produc = (iniProduc * owned) * multipliers
+    public int id;
     public GameObject statusBox;
-    public int upgrade_cost;
-    public int level;
+    public double initialCost;
+    public double upgrade_cost;
+    public double Coefficient;
+    public int time;
+    public double iniRevenue;
+    public double iniProduc;
+    public double produc;
+    
+    public double level;
     public GameObject activeBTN;
     public GameObject activeTXT;
     public GameObject lockedBTN;
     public GameObject lockedTXT;
-    public int qtyCoins;
+    public double qtyCoins;
     public bool makeProfit = false;
-    public int time;
+    
     public int timeDecrease;
-    public int costDecrease;
+    public double costDecrease;
     public GameObject decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
     public GameObject lockeddecreaseTimeBTN;
@@ -29,17 +39,22 @@ public class UpgradeBTN : MonoBehaviour
 
     void Start()
     {
-
+        activeTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
+        lockedTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
     }
 
     void Update()
     {
         qtyCoins = GameManager.coinsCount;
-        activeTXT.GetComponent<Text>().text             = "Boost post - $" + upgrade_cost;
-        lockedTXT.GetComponent<Text>().text             = "Boost post - $" + upgrade_cost;
+        if (level > 0)
+        {
+            double aux = System.Math.Round(upgrade_cost, 2);
+            activeTXT.GetComponent<Text>().text = "Boost post - $" + aux;
+            lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
+        }
 
-        decreaseTimeTXT.GetComponent<Text>().text       = "Sell your art " + timeDecrease + " seconds faster - $" + costDecrease;
-        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art " + timeDecrease + " seconds faster - $" + costDecrease;
+        decreaseTimeTXT.GetComponent<Text>().text       = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
+        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
 
         if (qtyCoins >= upgrade_cost)
         {
@@ -72,32 +87,30 @@ public class UpgradeBTN : MonoBehaviour
     //
     //
     // Upgrade when click
+    // upgrade_cost  = initialCost * (coefficient)^owned
+    // produc = (iniProduc * owned) * multipliers
     public void ClickButton()
     {
         if(GameManager.coinsCount >= upgrade_cost)
         {
             GameManager.coinsCount -= upgrade_cost;
-            upgrade_cost *= 2;
             level++;
+            double aux = System.Math.Pow(Coefficient, level);
+            upgrade_cost = initialCost * (aux);
+            produc = (iniProduc * level);
             print(level);
-            GameManager.cps += level;
-        }
-        else
-        {
-            statusBox.GetComponent<Text>().text = "Not enough coins.";
-            statusBox.GetComponent<Animation>().Play("status_anim");
-        }
+            GameManager.cps += produc;
+        }  
     }
     //
     //
     // Auto_money_maker
     IEnumerator makeMoney()
     {
-        GameManager.coinsCount += level;
-        print("arte" + ID + " made " + level + " coins");
+        GameManager.coinsCount += produc;
+        print("arte" + id + " made " + produc + " coins");
         yield return new WaitForSeconds(time);
         makeProfit = false;
-
     }
     //
     //
@@ -106,6 +119,7 @@ public class UpgradeBTN : MonoBehaviour
     {
         if (time > 1)
         {
+            GameManager.coinsCount -= costDecrease;
             costDecrease *= 2;
             time -= timeDecrease;
         }
@@ -118,5 +132,4 @@ public class UpgradeBTN : MonoBehaviour
     //
     //
     // 
-
 }

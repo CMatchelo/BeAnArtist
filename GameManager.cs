@@ -9,23 +9,18 @@ using UnityEngine.UI;
  * */
 public class GameManager : MonoBehaviour
 {
-    public static int coinsCount;
+    public static double coinsCount; // Total of coins the player has
     public GameObject coinsDisplay;
     public GameObject autocoinsStats;
-    public int coinsInternal;
-    public static int cps;
+    public double coinsInternal;
+    public static double cps;      // Coins per second the player is making
 
     // Update is called once per frame
     void Update()
 
     {
-        coinsInternal = coinsCount;
-        coinsDisplay.GetComponent<Text>().text = "teste " + coinsCount;
+        coinsInternal = System.Math.Round(coinsCount,2);
+        coinsDisplay.GetComponent<Text>().text = "teste " + coinsInternal;
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
-
-
-
-
-
 }
