@@ -52,10 +52,18 @@ public class UpgradeBTN : MonoBehaviour
             activeTXT.GetComponent<Text>().text = "Boost post - $" + aux;
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
-
-        decreaseTimeTXT.GetComponent<Text>().text       = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
-        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
-
+        //
+        if (time <= 0)
+        {
+            decreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
+            lockeddecreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
+        }
+        else
+        {
+            decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
+            lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
+        }
+        //
         if (qtyCoins >= upgrade_cost)
         {
             activeBTN.SetActive(true);
@@ -72,7 +80,7 @@ public class UpgradeBTN : MonoBehaviour
             makeProfit = true;
             StartCoroutine(makeMoney());
         }
-
+        //
         if (qtyCoins >= costDecrease && time > 1 && makeProfit == true)
         {
             decreaseTimeBTN.SetActive(true);
