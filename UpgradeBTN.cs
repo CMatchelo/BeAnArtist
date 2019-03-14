@@ -17,7 +17,7 @@ public class UpgradeBTN : MonoBehaviour
     public double initialCost;
     public double upgrade_cost;
     public double Coefficient;
-    public int time;
+    public float time;
     public double iniRevenue;
     public double iniProduc;
     public double produc;
@@ -30,7 +30,7 @@ public class UpgradeBTN : MonoBehaviour
     public double qtyCoins;
     public bool makeProfit = false;
     
-    public int timeDecrease;
+    public float timeDecrease;
     public double costDecrease;
     public GameObject decreaseTimeBTN;
     public GameObject decreaseTimeTXT;

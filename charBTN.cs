@@ -8,9 +8,14 @@ using UnityEngine.UI;
  * */
 public class charBTN : MonoBehaviour
 {
-    //public GameObject textBox;
+    // upgrade_cost  = initialCost * (coefficient)^owned
+    // produc = (iniProduc * owned) * multipliers
     public double charCoins; // Quantidade de coins por click no char
+    public double iniCharCoins;
     public double upgradeValue;
+    public double iniUpgradeValue;
+    public double coefficient;
+    public double level;
     public GameObject upgProfitActive;
     public GameObject upgProfitActiveTXT;
     public GameObject upgProfitLocked;
@@ -45,7 +50,11 @@ public class charBTN : MonoBehaviour
 
     public void UpgradeProfit()
     {
-        upgradeValue *= 2;
-        charCoins *= 2;
+        GameManager.coinsCount -= upgradeValue;
+        level++;
+        double aux = System.Math.Pow(coefficient, level);
+        upgradeValue = iniUpgradeValue * aux;
+        charCoins = iniCharCoins * level;
+
     }
 }
