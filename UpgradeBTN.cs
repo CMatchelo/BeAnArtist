@@ -18,7 +18,7 @@ public class UpgradeBTN : MonoBehaviour
     public double upgrade_cost;
     public double Coefficient;
     public float time;
-    public double iniRevenue;
+    //public double iniRevenue;
     public double iniProduc;
     public double produc;
     
@@ -53,7 +53,7 @@ public class UpgradeBTN : MonoBehaviour
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
         //
-        if (time <= 0)
+        if (time <= 1)
         {
             decreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
             lockeddecreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
@@ -99,16 +99,14 @@ public class UpgradeBTN : MonoBehaviour
     // produc = (iniProduc * owned) * multipliers
     public void ClickButton()
     {
-        if(GameManager.coinsCount >= upgrade_cost)
-        {
-            GameManager.coinsCount -= upgrade_cost;
-            level++;
-            double aux = System.Math.Pow(Coefficient, level);
-            upgrade_cost = initialCost * (aux);
-            produc = (iniProduc * level);
-            print(level);
-            GameManager.cps += produc;
-        }  
+        double produc_old = produc;
+        GameManager.coinsCount -= upgrade_cost;
+        level++;
+        double aux = System.Math.Pow(Coefficient, level);
+        upgrade_cost = initialCost * (aux);
+        produc = (iniProduc * level);
+        print(level);
+        GameManager.cps += (produc-produc_old);
     }
     //
     //
@@ -127,6 +125,7 @@ public class UpgradeBTN : MonoBehaviour
     {
         if (time > 1)
         {
+            print("decreased");
             GameManager.coinsCount -= costDecrease;
             costDecrease *= 2;
             time -= timeDecrease;

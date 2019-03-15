@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     {
         coinsInternal = System.Math.Round(coinsCount,2);
-        coinsDisplay.GetComponent<Text>().text = "teste " + coinsInternal;
+        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal;
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
 }
