@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 //using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using System.Collections;
 
 /*
  * Controls Art1`s upgrades
@@ -13,6 +15,7 @@ public class UpgradeBTN : MonoBehaviour
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
     public int id;
+    public int started;
     public GameObject statusBox;
     public double initialCost;
     public double upgrade_cost;
@@ -36,11 +39,42 @@ public class UpgradeBTN : MonoBehaviour
     public GameObject decreaseTimeTXT;
     public GameObject lockeddecreaseTimeBTN;
     public GameObject lockeddecreaseTimeTXT;
+    
+    private void Awake()
+    {
+        if (PlayerPrefs.HasKey("levelSaved"))
+        {
+            level = ((double)PlayerPrefs.GetInt("levelSaved"));
+            print("Opened: " + level);
+        }
+        else
+        {
+            level = 0;
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        int aux = (int)level;
+        PlayerPrefs.SetInt("levelSaved", aux);
+        print("Saved: " + aux);
+    }
 
     void Start()
     {
         activeTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
         lockedTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
+        if (level > 0)
+        {
+            double aux = System.Math.Pow(Coefficient, level);
+            upgrade_cost = initialCost * (aux);
+            produc = (iniProduc * level);
+            double aux2 = System.Math.Round(upgrade_cost, 2);
+            activeTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
+            lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
+            makeProfit = true;
+            StartCoroutine(makeMoney());
+        }
     }
 
     void Update()
@@ -49,11 +83,13 @@ public class UpgradeBTN : MonoBehaviour
         if (level > 0)
         {
             double aux = System.Math.Round(upgrade_cost, 2);
+            //Mathf.RoundToInt((float)myDouble);
+            //int aux = Mathf.CeilToInt((float)upgrade_cost);
             activeTXT.GetComponent<Text>().text = "Boost post - $" + aux;
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
         //
-        if (time <= 1)
+        if (time <= 1 && level > 1)
         {
             decreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
             lockeddecreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
