@@ -15,6 +15,31 @@ public class GameManager : MonoBehaviour
     public double coinsInternal;
     public static double cps;      // Coins per second the player is making
 
+    void Awake()
+    {
+        if (PlayerPrefs.HasKey("coinsSaved"))
+        {
+            float aux = PlayerPrefs.GetFloat("coinsSaved");
+            coinsCount = (float)aux;
+            //
+            aux = PlayerPrefs.GetFloat("cpsSaved");
+            cps = (float)aux;
+        }
+        else
+        {
+            coinsCount = 0;
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        //int aux = (int)coinsCount;
+        PlayerPrefs.SetFloat("coinsSaved", (float)coinsCount);
+        PlayerPrefs.SetFloat("cpsSaved", (float)cps);
+        print("Coins Saved: " + coinsCount);
+        //PlayerPrefs.DeleteAll();
+    }
+
     // Update is called once per frame
     void Update()
 

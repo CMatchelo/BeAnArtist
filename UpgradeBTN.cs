@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using System.Collections;
 
 /*
  * Controls Art1`s upgrades
@@ -25,7 +24,7 @@ public class UpgradeBTN : MonoBehaviour
     public double iniProduc;
     public double produc;
     
-    public double level;
+    private double level;
     public GameObject activeBTN;
     public GameObject activeTXT;
     public GameObject lockedBTN;
@@ -35,35 +34,43 @@ public class UpgradeBTN : MonoBehaviour
     
     public float timeDecrease;
     public double costDecrease;
+    public double iniCostDecrease;
     public GameObject decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
     public GameObject lockeddecreaseTimeBTN;
     public GameObject lockeddecreaseTimeTXT;
     
-    private void Awake()
+    void Awake()
     {
-        if (PlayerPrefs.HasKey("levelSaved"))
+        // Load level
+        String levelSavedAux = "levelSave" + id;
+        String timeSavedAux = "timeSave" + id;
+        if (PlayerPrefs.HasKey(levelSavedAux))
         {
-            level = ((double)PlayerPrefs.GetInt("levelSaved"));
-            print("Opened: " + level);
+            int aux;
+            aux = PlayerPrefs.GetInt(levelSavedAux, 0);
+            //print("Opened: art" + id + " @ level " + aux);
+            level = (double)aux;
         }
-        else
+        // Load time
+        if (PlayerPrefs.HasKey(timeSavedAux))
         {
-            level = 0;
+            time = PlayerPrefs.GetFloat(timeSavedAux, 0);
         }
     }
 
     void OnApplicationQuit()
     {
-        int aux = (int)level;
-        PlayerPrefs.SetInt("levelSaved", aux);
-        print("Saved: " + aux);
+        String levelSavedAux = "levelSave" + id;
+        String timeSavedAux = "timeSave" + id;
+        PlayerPrefs.SetInt(levelSavedAux, (int)level);
+        PlayerPrefs.SetFloat(timeSavedAux, time);
+        //PlayerPrefs.DeleteAll();
     }
 
     void Start()
     {
-        activeTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
-        lockedTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
+        print("start art " + id + " at level " + level);
         if (level > 0)
         {
             double aux = System.Math.Pow(Coefficient, level);
@@ -74,6 +81,11 @@ public class UpgradeBTN : MonoBehaviour
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
             makeProfit = true;
             StartCoroutine(makeMoney());
+        }
+        else
+        {
+            activeTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
+            lockedTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
         }
     }
 
@@ -89,16 +101,17 @@ public class UpgradeBTN : MonoBehaviour
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
         //
+        /*
         if (time <= 1 && level > 1)
         {
             decreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
             lockeddecreaseTimeTXT.GetComponent<Text>().text = "Minimum time reached";
         }
         else
-        {
-            decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
-            lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " " + timeDecrease + " seconds faster - $" + costDecrease;
-        }
+        {*/
+            decreaseTimeTXT.GetComponent<Text>().text = "Sell your art 2x faster - $" + costDecrease;
+            lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art 2x faster - $" + costDecrease; ;
+        //}
         //
         if (qtyCoins >= upgrade_cost)
         {
@@ -117,7 +130,7 @@ public class UpgradeBTN : MonoBehaviour
             StartCoroutine(makeMoney());
         }
         //
-        if (qtyCoins >= costDecrease && time > 1 && makeProfit == true)
+        if (qtyCoins >= costDecrease && makeProfit == true)
         {
             decreaseTimeBTN.SetActive(true);
             lockeddecreaseTimeBTN.SetActive(false);
@@ -159,18 +172,19 @@ public class UpgradeBTN : MonoBehaviour
     // Decrease time to profit
     public void DecreaseTimeProfit()
     {
-        if (time > 1)
-        {
+        //if (time > 1)
+        //{
             print("decreased");
             GameManager.coinsCount -= costDecrease;
-            costDecrease *= 2;
-            time -= timeDecrease;
-        }
-        
+            double aux = System.Math.Pow(Coefficient, level);
+            costDecrease = iniCostDecrease*aux;
+            time = time/2;
+       // }
+        /*
         if (time < 1)
         {
             time = 1;
-        }
+        }*/
     }
     //
     //
