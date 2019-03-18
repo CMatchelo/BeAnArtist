@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("coinsSaved", (float)coinsCount);
         PlayerPrefs.SetFloat("cpsSaved", (float)cps);
         print("Coins Saved: " + coinsCount);
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
     }
 
     // Update is called once per frame

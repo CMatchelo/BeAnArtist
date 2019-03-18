@@ -11,7 +11,7 @@ public class charBTN : MonoBehaviour
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
     public double charCoins; // Quantidade de coins por click no char
-    public double iniCharCoins;
+    //public double iniCharCoins;
     public double upgradeValue;
     public double iniUpgradeValue;
     public double coefficient;
@@ -22,15 +22,38 @@ public class charBTN : MonoBehaviour
     public GameObject upgProfitLockedTXT;
     public double qtyCoins;
 
+    void Awake()
+    {
+        if (PlayerPrefs.HasKey("level"))
+        {
+            float aux = PlayerPrefs.GetFloat("level", 0);
+            level = (double)aux;
+        }
+    }
     void Start()
     {
+        double aux = System.Math.Pow(coefficient, level);
+        upgradeValue = iniUpgradeValue * aux;
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make 2 coins by clicking - $" + upgradeValue;
+        upgProfitLockedTXT.GetComponent<Text>().text = "Make 2 coins by clicking - $" + upgradeValue;
+    }
+
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat("level", (float)level);
+        PlayerPrefs.DeleteAll();
     }
 
     void Update()
     {
         qtyCoins = GameManager.coinsCount;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make " + charCoins*2 + " coins by clicking - $" + upgradeValue;
-        upgProfitLockedTXT.GetComponent<Text>().text = "Make " + charCoins*2 + " coins by clicking - $" + upgradeValue;
+        //double nextCoins = iniCharCoins * level + 2;
+        if(level>0)
+        {
+            upgProfitActiveTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
+            upgProfitLockedTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
+            print(level);
+        }
         if (qtyCoins >= upgradeValue)
         {
             upgProfitActive.SetActive(true);
@@ -53,8 +76,8 @@ public class charBTN : MonoBehaviour
         GameManager.coinsCount -= upgradeValue;
         level++;
         double aux = System.Math.Pow(coefficient, level);
-        upgradeValue = iniUpgradeValue * aux;
-        charCoins = iniCharCoins * level;
-
+        //upgradeValue = iniUpgradeValue * aux;
+        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
+        charCoins = level+1;
     }
 }
