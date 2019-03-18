@@ -24,7 +24,7 @@ public class charBTN : MonoBehaviour
 
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("level"))
         {
             float aux = PlayerPrefs.GetFloat("level", 0);

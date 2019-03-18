@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("coinsSaved"))
         {
             float aux = PlayerPrefs.GetFloat("coinsSaved");

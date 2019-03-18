@@ -27,7 +27,6 @@ public class Tutorial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(step);
         // Comprar arte
         if (GameManager.coinsCount >= 4 && step < 2)
         {
@@ -69,6 +68,7 @@ public class Tutorial : MonoBehaviour
             locked_btn_upgArt1.SetActive(true);
             goToGame.SetActive(true);
             // Colocar botao pra carregar SampleScene
+            PlayerPrefs.SetInt("TutorialDone", 1);
             goToGame.GetComponent<Button>().onClick.AddListener(() => ClickLevel("SampleScene"));
         }
     }

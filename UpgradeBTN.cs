@@ -41,7 +41,7 @@ public class UpgradeBTN : MonoBehaviour
     
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         String levelSavedAux = "levelSave" + id;
         String timeSavedAux = "timeSave" + id;
         String levelDecreaseAux = "levelDecrease" + id;
