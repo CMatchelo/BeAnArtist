@@ -41,6 +41,7 @@ public class UpgradeBTN : MonoBehaviour
     
     void Awake()
     {
+        PlayerPrefs.DeleteAll();
         String levelSavedAux = "levelSave" + id;
         String timeSavedAux = "timeSave" + id;
         String levelDecreaseAux = "levelDecrease" + id;
@@ -71,7 +72,6 @@ public class UpgradeBTN : MonoBehaviour
         PlayerPrefs.SetInt(levelSavedAux, (int)level);
         PlayerPrefs.SetFloat(timeSavedAux, time);
         PlayerPrefs.SetInt(levelDecreaseAux, (int)levelDecrease);
-        PlayerPrefs.DeleteAll();
     }
 
     void Start()
@@ -110,8 +110,8 @@ public class UpgradeBTN : MonoBehaviour
             lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
         //
-        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art 2x faster - $" + costDecrease;
-        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art 2x faster - $" + costDecrease;
+        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
+        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
         //
         if (qtyCoins >= upgrade_cost)
         {
@@ -154,7 +154,6 @@ public class UpgradeBTN : MonoBehaviour
         double aux = System.Math.Pow(Coefficient, level);
         upgrade_cost = initialCost * (aux);
         produc = (iniProduc * level);
-        print(level);
         GameManager.cps += (produc-produc_old);
     }
     //
@@ -172,7 +171,6 @@ public class UpgradeBTN : MonoBehaviour
     // Decrease time to profit
     public void DecreaseTimeProfit()
     {
-        print("decreased");
         levelDecrease++;
         GameManager.coinsCount -= costDecrease;
         double aux = System.Math.Pow(Coefficient, levelDecrease);

@@ -24,6 +24,7 @@ public class charBTN : MonoBehaviour
 
     void Awake()
     {
+        PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("level"))
         {
             float aux = PlayerPrefs.GetFloat("level", 0);
@@ -41,7 +42,6 @@ public class charBTN : MonoBehaviour
     void OnApplicationQuit()
     {
         PlayerPrefs.SetFloat("level", (float)level);
-        PlayerPrefs.DeleteAll();
     }
 
     void Update()
@@ -52,7 +52,6 @@ public class charBTN : MonoBehaviour
         {
             upgProfitActiveTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
             upgProfitLockedTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
-            print(level);
         }
         if (qtyCoins >= upgradeValue)
         {

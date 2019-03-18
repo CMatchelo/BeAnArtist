@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("coinsSaved"))
         {
             float aux = PlayerPrefs.GetFloat("coinsSaved");
@@ -36,8 +37,6 @@ public class GameManager : MonoBehaviour
         //int aux = (int)coinsCount;
         PlayerPrefs.SetFloat("coinsSaved", (float)coinsCount);
         PlayerPrefs.SetFloat("cpsSaved", (float)cps);
-        print("Coins Saved: " + coinsCount);
-        PlayerPrefs.DeleteAll();
     }
 
     // Update is called once per frame
