@@ -63,7 +63,7 @@ public class Tutorial : MonoBehaviour
 
         if (step == 4)
         {
-            txtTutorial.GetComponent<Text>().text = "Well, now you know how to progress in your carrer. Click in the button and go ahead";
+            txtTutorial.GetComponent<Text>().text = "Well, now you know how to progress in your career. Click in the button and go ahead";
             btn_upgArt1.SetActive(false);
             locked_btn_upgArt1.SetActive(true);
             goToGame.SetActive(true);

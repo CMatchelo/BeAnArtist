@@ -10,11 +10,8 @@ using UnityEngine.UI;
  * */
 public class UpgradeBTN : MonoBehaviour
 {
-    // upgrade_cost  = initialCost * (coefficient)^owned
-    // produc = (iniProduc * owned) * multipliers
     public int id;
-    public int started;
-    public GameObject statusBox;
+    //public int started;
     public double initialCost;
     public double upgrade_cost;
     public double Coefficient;
@@ -23,10 +20,8 @@ public class UpgradeBTN : MonoBehaviour
     public double produc;
     
     private double level;
-    public GameObject activeBTN;
+    public Button activeBTN;
     public GameObject activeTXT;
-    public GameObject lockedBTN;
-    public GameObject lockedTXT;
     public double qtyCoins;
     public bool makeProfit = false;
     
@@ -34,10 +29,10 @@ public class UpgradeBTN : MonoBehaviour
     public double costDecrease;
     public double iniCostDecrease;
     public double levelDecrease;
-    public GameObject decreaseTimeBTN;
+    public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
-    public GameObject lockeddecreaseTimeBTN;
-    public GameObject lockeddecreaseTimeTXT;
+    //public GameObject lockeddecreaseTimeBTN;
+    //public GameObject lockeddecreaseTimeTXT;
     
     void Awake()
     {
@@ -76,7 +71,6 @@ public class UpgradeBTN : MonoBehaviour
 
     void Start()
     {
-        print("start art " + id + " at level " + level);
         if (level > 0)
         {
             double aux = System.Math.Pow(Coefficient, level);
@@ -84,14 +78,12 @@ public class UpgradeBTN : MonoBehaviour
             produc = (iniProduc * level);
             double aux2 = System.Math.Round(upgrade_cost, 2);
             activeTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
-            lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
             makeProfit = true;
             StartCoroutine(makeMoney());
         }
         else
         {
             activeTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
-            lockedTXT.GetComponent<Text>().text = "Post art - $" + initialCost;
         }
         if (levelDecrease > 0)
         {
@@ -107,21 +99,17 @@ public class UpgradeBTN : MonoBehaviour
         {
             double aux = System.Math.Round(upgrade_cost, 2);
             activeTXT.GetComponent<Text>().text = "Boost post - $" + aux;
-            lockedTXT.GetComponent<Text>().text = "Boost post - $" + aux;
         }
         //
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
-        lockeddecreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
         //
         if (qtyCoins >= upgrade_cost)
         {
-            activeBTN.SetActive(true);
-            lockedBTN.SetActive(false);
+            activeBTN.interactable = true;
         }
         else
         {
-            activeBTN.SetActive(false);
-            lockedBTN.SetActive(true);
+            activeBTN.interactable = false;
         }
         // Verifies if art is active
         if (level > 0 && makeProfit == false)
@@ -132,13 +120,11 @@ public class UpgradeBTN : MonoBehaviour
         //
         if (qtyCoins >= costDecrease && makeProfit == true)
         {
-            decreaseTimeBTN.SetActive(true);
-            lockeddecreaseTimeBTN.SetActive(false);
+            decreaseTimeBTN.interactable = true;
         }
         else
         {
-            decreaseTimeBTN.SetActive(false);
-            lockeddecreaseTimeBTN.SetActive(true);
+            decreaseTimeBTN.interactable = false;
         }
     }
     //
@@ -176,6 +162,7 @@ public class UpgradeBTN : MonoBehaviour
         double aux = System.Math.Pow(Coefficient, levelDecrease);
         costDecrease = iniCostDecrease*aux;
         time = time/2;
+        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
     }
     //
     //

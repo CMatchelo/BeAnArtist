@@ -35,8 +35,8 @@ public class charBTN : MonoBehaviour
     {
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = iniUpgradeValue * aux;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make 2 coins by clicking - $" + upgradeValue;
-        upgProfitLockedTXT.GetComponent<Text>().text = "Make 2 coins by clicking - $" + upgradeValue;
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
+        upgProfitLockedTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
     }
 
     void OnApplicationQuit()
@@ -50,8 +50,8 @@ public class charBTN : MonoBehaviour
         //double nextCoins = iniCharCoins * level + 2;
         if(level>0)
         {
-            upgProfitActiveTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
-            upgProfitLockedTXT.GetComponent<Text>().text = "Make " + (charCoins + 1) + " coins by clicking - $" + upgradeValue;
+            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
+            upgProfitLockedTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
         }
         if (qtyCoins >= upgradeValue)
         {
