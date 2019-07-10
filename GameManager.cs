@@ -14,10 +14,11 @@ public class GameManager : MonoBehaviour
     public GameObject autocoinsStats;
     public double coinsInternal;
     public static double cps;      // Coins per second the player is making
+    public static int ptcCoinsCount = 0;
 
     void Awake()
     {
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("coinsSaved"))
         {
             float aux = PlayerPrefs.GetFloat("coinsSaved");
@@ -41,10 +42,14 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-
     {
+        if (coinsCount > 100000)
+        {
+            coinsCount = coinsCount / 100000;
+            ptcCoinsCount += 5;
+        }
         coinsInternal = System.Math.Round(coinsCount,2);
-        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal;
+        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + "x10^" + ptcCoinsCount;
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
 }

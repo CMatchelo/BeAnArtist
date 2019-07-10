@@ -31,12 +31,10 @@ public class UpgradeBTN : MonoBehaviour
     public double levelDecrease;
     public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
-    //public GameObject lockeddecreaseTimeBTN;
-    //public GameObject lockeddecreaseTimeTXT;
     
     void Awake()
     {
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
         String levelSavedAux = "levelSave" + id;
         String timeSavedAux = "timeSave" + id;
         String levelDecreaseAux = "levelDecrease" + id;
@@ -103,6 +101,7 @@ public class UpgradeBTN : MonoBehaviour
         //
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
         //
+        //Verifies if enough money to upgrade art
         if (qtyCoins >= upgrade_cost)
         {
             activeBTN.interactable = true;
@@ -117,7 +116,7 @@ public class UpgradeBTN : MonoBehaviour
             makeProfit = true;
             StartCoroutine(makeMoney());
         }
-        //
+        // Verifies if enough money to downgrade time to profit
         if (qtyCoins >= costDecrease && makeProfit == true)
         {
             decreaseTimeBTN.interactable = true;

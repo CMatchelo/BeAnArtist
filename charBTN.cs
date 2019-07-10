@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+//using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,23 +10,23 @@ using UnityEngine.UI;
  * */
 public class charBTN : MonoBehaviour
 {
+
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
     public double charCoins; // Quantidade de coins por click no char
-    //public double iniCharCoins;
     public double upgradeValue;
     public double iniUpgradeValue;
     public double coefficient;
     public double level;
-    public GameObject upgProfitActive;
+    public Button upgProfitActive;
     public GameObject upgProfitActiveTXT;
-    public GameObject upgProfitLocked;
-    public GameObject upgProfitLockedTXT;
     public double qtyCoins;
+    public double ptcQtyCoins;
+    public double ptcCharCoins = 0;
 
     void Awake()
     {
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("level"))
         {
             float aux = PlayerPrefs.GetFloat("level", 0);
@@ -36,7 +38,6 @@ public class charBTN : MonoBehaviour
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = iniUpgradeValue * aux;
         upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
-        upgProfitLockedTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
     }
 
     void OnApplicationQuit()
@@ -47,21 +48,19 @@ public class charBTN : MonoBehaviour
     void Update()
     {
         qtyCoins = GameManager.coinsCount;
+        ptcQtyCoins = GameManager.ptcCoinsCount;
         //double nextCoins = iniCharCoins * level + 2;
-        if(level>0)
+        if (level>0)
         {
             upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
-            upgProfitLockedTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
         }
-        if (qtyCoins >= upgradeValue)
+        if (qtyCoins >= upgradeValue && ptcCharCoins >= ptcQtyCoins)
         {
-            upgProfitActive.SetActive(true);
-            upgProfitLocked.SetActive(false);
+            upgProfitActive.interactable = true;
         }
         else
         {
-            upgProfitActive.SetActive(false);
-            upgProfitLocked.SetActive(true);
+            upgProfitActive.interactable = false;
         }
     }
 
@@ -75,8 +74,12 @@ public class charBTN : MonoBehaviour
         GameManager.coinsCount -= upgradeValue;
         level++;
         double aux = System.Math.Pow(coefficient, level);
-        //upgradeValue = iniUpgradeValue * aux;
-        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
+        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);/*
+        if (upgradeValue > 100000)
+        {
+            upgradeValue = System.Math.Round(upgradeValue / 100000, 2);
+            ptcCharCoins += 5;
+        }*/
         charCoins = level+1;
     }
 }
