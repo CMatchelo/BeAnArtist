@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll(); // DELETE ALL PREFS LINE *********
         if (PlayerPrefs.HasKey("coinsSaved"))
         {
             float aux = PlayerPrefs.GetFloat("coinsSaved");
@@ -43,13 +43,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (coinsCount > 100000)
+        if (coinsCount > 1000) //////////////////////// if high value
         {
-            coinsCount = coinsCount / 100000;
-            ptcCoinsCount += 5;
+            HighValue.CalculatePTC(&coinsCount, &ptcCoinsCount);
+            print("entrou no if");
         }
         coinsInternal = System.Math.Round(coinsCount,2);
-        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + "x10^" + ptcCoinsCount;
+        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
 }

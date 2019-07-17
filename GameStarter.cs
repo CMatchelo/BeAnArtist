@@ -8,7 +8,7 @@ public class GameStarter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll(); // DELETE ALL PREFS LINE *********
         if (PlayerPrefs.HasKey("TutorialDone"))
         { 
             SceneManager.LoadScene("SampleScene");

@@ -54,7 +54,12 @@ public class charBTN : MonoBehaviour
         {
             upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
         }
-        if (qtyCoins >= upgradeValue && ptcCharCoins >= ptcQtyCoins)
+        // Verifies if enough money to buy upgrade
+        if ((ptcCharCoins < ptcQtyCoins))
+        {
+            upgProfitActive.interactable = false;
+        }
+        else if (qtyCoins >= upgradeValue)
         {
             upgProfitActive.interactable = true;
         }
@@ -74,12 +79,11 @@ public class charBTN : MonoBehaviour
         GameManager.coinsCount -= upgradeValue;
         level++;
         double aux = System.Math.Pow(coefficient, level);
-        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);/*
-        if (upgradeValue > 100000)
+        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
+        if (upgradeValue > 1000) //////////////////////// if high value
         {
-            upgradeValue = System.Math.Round(upgradeValue / 100000, 2);
-            ptcCharCoins += 5;
-        }*/
+            HighValue.CalculatePTC(&upgradeValue, &ptcCharCoins);
+        }
         charCoins = level+1;
     }
 }

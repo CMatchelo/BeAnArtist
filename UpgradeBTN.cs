@@ -11,30 +11,32 @@ using UnityEngine.UI;
 public class UpgradeBTN : MonoBehaviour
 {
     public int id;
-    //public int started;
+    public double qtyCoins;
+    public int ptcQtyCoins;
+    public bool makeProfit = false;
+    private double level;
+
     public double initialCost;
     public double upgrade_cost;
     public double Coefficient;
     public float time;
     public double iniProduc;
     public double produc;
-    
-    private double level;
+    public int ptcUpgrade = 0;
     public Button activeBTN;
     public GameObject activeTXT;
-    public double qtyCoins;
-    public bool makeProfit = false;
-    
+
     public float timeDecrease;
     public double costDecrease;
     public double iniCostDecrease;
     public double levelDecrease;
+    public int ptcDecrease = 0;
     public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
     
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll(); // DELETE ALL PREFS LINE *********
         String levelSavedAux = "levelSave" + id;
         String timeSavedAux = "timeSave" + id;
         String levelDecreaseAux = "levelDecrease" + id;
@@ -69,6 +71,8 @@ public class UpgradeBTN : MonoBehaviour
 
     void Start()
     {
+        qtyCoins = GameManager.coinsCount;
+        ptcQtyCoins = GameManager.ptcCoinsCount;
         if (level > 0)
         {
             double aux = System.Math.Pow(Coefficient, level);
@@ -93,6 +97,7 @@ public class UpgradeBTN : MonoBehaviour
     void Update()
     {
         qtyCoins = GameManager.coinsCount;
+        ptcQtyCoins = GameManager.ptcCoinsCount;
         if (level > 0)
         {
             double aux = System.Math.Round(upgrade_cost, 2);
@@ -102,7 +107,11 @@ public class UpgradeBTN : MonoBehaviour
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
         //
         //Verifies if enough money to upgrade art
-        if (qtyCoins >= upgrade_cost)
+        if (ptcUpgrade < ptcQtyCoins)
+        {
+            activeBTN.interactable = false;
+        }
+        else if (qtyCoins >= upgrade_cost)
         {
             activeBTN.interactable = true;
         }
@@ -117,7 +126,11 @@ public class UpgradeBTN : MonoBehaviour
             StartCoroutine(makeMoney());
         }
         // Verifies if enough money to downgrade time to profit
-        if (qtyCoins >= costDecrease && makeProfit == true)
+        if (ptcDecrease < ptcQtyCoins)
+        {
+            decreaseTimeBTN.interactable = false;
+        }
+        else if (qtyCoins >= costDecrease && makeProfit == true)
         {
             decreaseTimeBTN.interactable = true;
         }
@@ -128,18 +141,18 @@ public class UpgradeBTN : MonoBehaviour
     }
     //
     //
-    // Upgrade when click
+    // Upgrade when clicked - More money by time unit
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
     public void ClickButton()
-    {
+    { // prod // upgrade_cost // level // coefficient // initialCost // iniProduc
         double produc_old = produc;
-        GameManager.coinsCount -= upgrade_cost;
+        GameManager.coinsCount -= upgrade_cost; //////////////////////////////////
         level++;
         double aux = System.Math.Pow(Coefficient, level);
         upgrade_cost = initialCost * (aux);
         produc = (iniProduc * level);
-        GameManager.cps += (produc-produc_old);
+        GameManager.cps += (produc-produc_old); //////////////////////////////////
     }
     //
     //
@@ -153,15 +166,19 @@ public class UpgradeBTN : MonoBehaviour
     }
     //
     //
-    // Decrease time to profit
+    // Decrease time to profit - Faster time unit
     public void DecreaseTimeProfit()
     {
         levelDecrease++;
         GameManager.coinsCount -= costDecrease;
         double aux = System.Math.Pow(Coefficient, levelDecrease);
         costDecrease = iniCostDecrease*aux;
+        if (costDecrease > 1000) //////////////////////// if high value
+        {
+            HighValue.CalculatePTC(&costDecrease, &ptcDecrease);
+        }
         time = time/2;
-        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
+        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
     }
     //
     //

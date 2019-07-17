@@ -6,13 +6,11 @@ using UnityEngine.UI;
 
 public class HighValue : MonoBehaviour
 {
-    public string[] Values = new string[] 
+    public static string[] values = new string[]
     { " ", "K", "M", "B", "T", "Q", "AA", "AB", "AC", "AD", "AE", "AF",  "AG" };
-
-    public void CalculatePTC (double value, double ptc)
+    public static void CalculatePTC(double* value, int* ptc)
     {
-        value = System.Math.Round(value/1000, 2);
+        value = System.Math.Round(value / 1000, 2);
         ptc += 1;
     }
-
 }
