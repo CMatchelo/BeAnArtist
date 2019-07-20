@@ -22,7 +22,8 @@ public class charBTN : MonoBehaviour
     public GameObject upgProfitActiveTXT;
     public double qtyCoins;
     public double ptcQtyCoins;
-    public double ptcCharCoins = 0;
+    public int ptcCharCoins = 0;
+    public int ptcUpgradeValue = 0;
 
     void Awake()
     {
@@ -71,19 +72,24 @@ public class charBTN : MonoBehaviour
 
     public void ClickButton()
     {
-        GameManager.coinsCount += charCoins; // Ganha coins ao clicar no char
+        //GameManager.coinsCount += charCoins; // Ganha coins ao clicar no char
+        HighValue.makeMoney(charCoins, ptcCharCoins);
     }
 
     public void UpgradeProfit()
     {
-        GameManager.coinsCount -= upgradeValue;
+        GameManager.coinsCount -= upgradeValue; ///////// Spent
         level++;
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
         if (upgradeValue > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(&upgradeValue, &ptcCharCoins);
+            HighValue.CalculatePTC(upgradeValue, ptcUpgradeValue, out upgradeValue, out ptcUpgradeValue);
         }
-        charCoins = level+1;
+        charCoins += 1;
+        if (charCoins > 1000) //////////////////////// if high value
+        {
+            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
+        }
     }
 }

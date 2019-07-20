@@ -173,14 +173,14 @@ public class UpgradeBTN : MonoBehaviour
         GameManager.coinsCount -= costDecrease;
         double aux = System.Math.Pow(Coefficient, levelDecrease);
         costDecrease = iniCostDecrease*aux;
-        if (costDecrease > 1000) //////////////////////// if high value
-        {
-            HighValue.CalculatePTC(&costDecrease, &ptcDecrease);
-        }
-        time = time/2;
-        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
+       if (costDecrease > 1000) //////////////////////// if high value
+       {
+           HighValue.CalculatePTC(costDecrease, ptcDecrease, out costDecrease, out ptcDecrease);
+       }
+       time = time/2;
+       decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
     }
     //
     //
-    // 
+    //
 }

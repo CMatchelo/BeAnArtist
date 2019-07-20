@@ -45,10 +45,10 @@ public class GameManager : MonoBehaviour
     {
         if (coinsCount > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(&coinsCount, &ptcCoinsCount);
+            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
             print("entrou no if");
         }
-        coinsInternal = System.Math.Round(coinsCount,2);
+        coinsInternal = System.Math.Round(coinsCount,4);
         coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
