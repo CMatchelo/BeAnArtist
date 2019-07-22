@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
- * Controls Art1`s upgrades
+ * Controls Art`s upgrades
  * */
 public class UpgradeBTN : MonoBehaviour
 {
@@ -19,13 +19,13 @@ public class UpgradeBTN : MonoBehaviour
     public double initialCost;
     public double upgrade_cost;
     public double Coefficient;
-    public float time;
     public double iniProduc;
     public double produc;
     public int ptcUpgrade = 0;
     public Button activeBTN;
     public GameObject activeTXT;
 
+    public float time;
     public float timeDecrease;
     public double costDecrease;
     public double iniCostDecrease;
@@ -147,10 +147,14 @@ public class UpgradeBTN : MonoBehaviour
     public void ClickButton()
     { // prod // upgrade_cost // level // coefficient // initialCost // iniProduc
         double produc_old = produc;
-        GameManager.coinsCount -= upgrade_cost; //////////////////////////////////
+        GameManager.coinsCount -= upgrade_cost; ////////////////////////////////// subtract money
         level++;
         double aux = System.Math.Pow(Coefficient, level);
         upgrade_cost = initialCost * (aux);
+        if (upgrade_cost >= 1000)
+        {
+            HighValue.CalculatePTC(upgrade_cost, ptcUpgrade, out upgrade_cost, out ptcUpgrade);
+        }
         produc = (iniProduc * level);
         GameManager.cps += (produc-produc_old); //////////////////////////////////
     }

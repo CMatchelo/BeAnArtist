@@ -8,11 +8,13 @@ using UnityEngine.UI;
 /*
  * Controls clicks @ mains char
  * */
-public class charBTN : MonoBehaviour
+public class CharBTN : MonoBehaviour
 {
 
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
+    public int ptcCharCoins = 0;
+    public int ptcUpgradeValue = 0;
     public double charCoins; // Quantidade de coins por click no char
     public double upgradeValue;
     public double iniUpgradeValue;
@@ -21,29 +23,45 @@ public class charBTN : MonoBehaviour
     public Button upgProfitActive;
     public GameObject upgProfitActiveTXT;
     public double qtyCoins;
-    public double ptcQtyCoins;
-    public int ptcCharCoins = 0;
-    public int ptcUpgradeValue = 0;
+    public int ptcQtyCoins;
+    
+    public void SaveCharValues()
+    {
+        CharSave.SaveChar(this);
+    }
+
+    public void LoadCharValues()
+    {
+        CharData data = CharSave.LoadChar();
+
+        ptcCharCoins = data.ptcCharCoins;
+        ptcUpgradeValue = data.ptcUpgradeValue;
+        level = data.level;
+        charCoins = data.charCoins;
+        upgradeValue = data.upgradeValue;
+    }
 
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        LoadCharValues();
+        /*PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("level"))
         {
             float aux = PlayerPrefs.GetFloat("level", 0);
             level = (double)aux;
-        }
+        }*/
     }
     void Start()
     {
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = iniUpgradeValue * aux;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
     }
 
     void OnApplicationQuit()
     {
-        PlayerPrefs.SetFloat("level", (float)level);
+        //PlayerPrefs.SetFloat("level", (float)level);
+        SaveCharValues();
     }
 
     void Update()
@@ -53,7 +71,7 @@ public class charBTN : MonoBehaviour
         //double nextCoins = iniCharCoins * level + 2;
         if (level>0)
         {
-            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + upgradeValue;
+            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
         }
         // Verifies if enough money to buy upgrade
         if ((ptcCharCoins < ptcQtyCoins))
