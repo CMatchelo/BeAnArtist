@@ -2,6 +2,7 @@
 using System.Collections;
 //using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,12 +28,14 @@ public class CharBTN : MonoBehaviour
     
     public void SaveCharValues()
     {
-        CharSave.SaveChar(this);
+        string path = Path.Combine(Application.persistentDataPath, "char.value");
+        SaveSystem.SaveChar(this, path);
     }
 
     public void LoadCharValues()
     {
-        CharData data = CharSave.LoadChar();
+        string path = Path.Combine(Application.persistentDataPath, "char.value");
+        CharData data = SaveSystem.LoadChar(path);
 
         ptcCharCoins = data.ptcCharCoins;
         ptcUpgradeValue = data.ptcUpgradeValue;
