@@ -2,19 +2,20 @@
 using System.Collections;
 //using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 /*
  * Controls Art`s upgrades
  * */
-public class UpgradeBTN : MonoBehaviour
+public class ArtsManager : MonoBehaviour
 {
     public int id;
     public double qtyCoins;
     public int ptcQtyCoins;
     public bool makeProfit = false;
-    private double level;
+    public double level;
 
     public double initialCost;
     public double upgrade_cost;
@@ -22,64 +23,32 @@ public class UpgradeBTN : MonoBehaviour
     public double iniProduc;
     public double produc;
     public int ptcUpgrade = 0;
+    public int ptcProduc = 0;
     public Button activeBTN;
     public GameObject activeTXT;
 
-    public float time;
-    public float timeDecrease;
+    public double time;
+    public double currentTime;
     public double costDecrease;
     public double iniCostDecrease;
-    public double levelDecrease;
+    public double levelDecrease=1;
     public int ptcDecrease = 0;
     public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
     
-    void Awake()
-    {
-        PlayerPrefs.DeleteAll(); // DELETE ALL PREFS LINE *********
-        String levelSavedAux = "levelSave" + id;
-        String timeSavedAux = "timeSave" + id;
-        String levelDecreaseAux = "levelDecrease" + id;
-        //
-        // Load level
-        if (PlayerPrefs.HasKey(levelSavedAux))
-        {
-            int aux;
-            aux = PlayerPrefs.GetInt(levelSavedAux, 0);
-            level = (double)aux;
-        }
-        //
-        // Load time
-        if (PlayerPrefs.HasKey(timeSavedAux))
-        {
-            time = PlayerPrefs.GetFloat(timeSavedAux, 0);
-            int aux;
-            aux = PlayerPrefs.GetInt(levelDecreaseAux, 0);
-            levelDecrease = (double)aux;
-        }
-    }
-
     void OnApplicationQuit()
     {
-        String levelSavedAux = "levelSave" + id;
-        String timeSavedAux = "timeSave" + id;
-        String levelDecreaseAux = "levelDecrease" + id;
-        PlayerPrefs.SetInt(levelSavedAux, (int)level);
-        PlayerPrefs.SetFloat(timeSavedAux, time);
-        PlayerPrefs.SetInt(levelDecreaseAux, (int)levelDecrease);
+        SaveValues();
     }
 
     void Start()
     {
+        LoadValues();
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
         if (level > 0)
         {
-            double aux = System.Math.Pow(Coefficient, level);
-            upgrade_cost = initialCost * (aux);
-            produc = (iniProduc * level);
-            double aux2 = System.Math.Round(upgrade_cost, 2);
-            activeTXT.GetComponent<Text>().text = "Boost post - $" + aux2;
+            activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgrade_cost, 2);
             makeProfit = true;
             StartCoroutine(makeMoney());
         }
@@ -91,6 +60,10 @@ public class UpgradeBTN : MonoBehaviour
         {
             double aux = System.Math.Pow(Coefficient, levelDecrease);
             costDecrease = iniCostDecrease * aux;
+        }
+        if (levelDecrease == 0)
+        {
+            currentTime = time;
         }
     }
 
@@ -106,6 +79,12 @@ public class UpgradeBTN : MonoBehaviour
         //
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2));
         //
+        // Verifies if art is active
+        if (level > 0 && makeProfit == false)
+        {
+            makeProfit = true;
+            StartCoroutine(makeMoney());
+        }
         //Verifies if enough money to upgrade art
         if (ptcUpgrade < ptcQtyCoins)
         {
@@ -119,12 +98,7 @@ public class UpgradeBTN : MonoBehaviour
         {
             activeBTN.interactable = false;
         }
-        // Verifies if art is active
-        if (level > 0 && makeProfit == false)
-        {
-            makeProfit = true;
-            StartCoroutine(makeMoney());
-        }
+       
         // Verifies if enough money to downgrade time to profit
         if (ptcDecrease < ptcQtyCoins)
         {
@@ -145,7 +119,7 @@ public class UpgradeBTN : MonoBehaviour
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
     public void ClickButton()
-    { // prod // upgrade_cost // level // coefficient // initialCost // iniProduc
+    {
         double produc_old = produc;
         GameManager.coinsCount -= upgrade_cost; ////////////////////////////////// subtract money
         level++;
@@ -165,7 +139,7 @@ public class UpgradeBTN : MonoBehaviour
     {
         GameManager.coinsCount += produc;
         print("arte" + id + " made " + produc + " coins");
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds((float)currentTime);
         makeProfit = false;
     }
     //
@@ -177,14 +151,35 @@ public class UpgradeBTN : MonoBehaviour
         GameManager.coinsCount -= costDecrease;
         double aux = System.Math.Pow(Coefficient, levelDecrease);
         costDecrease = iniCostDecrease*aux;
-       if (costDecrease > 1000) //////////////////////// if high value
-       {
+        if (costDecrease > 1000) //////////////////////// if high value
+        {
            HighValue.CalculatePTC(costDecrease, ptcDecrease, out costDecrease, out ptcDecrease);
-       }
-       time = time/2;
-       decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
+        }
+        currentTime = time/levelDecrease;
+        decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
     }
     //
     //
     //
+    public void SaveValues()
+    {
+        string path = Path.Combine(Application.persistentDataPath, id+"artsManager.value");
+        SaveSystem.SaveArts(this, path);
+    }
+
+    public void LoadValues()
+    {
+        string path = Path.Combine(Application.persistentDataPath, id+"artsManager.value");
+        ArtsData data = SaveSystem.LoadArts(path);
+
+        upgrade_cost = data.upgrade_cost;
+        produc = data.produc;
+        ptcUpgrade = data.ptcUpgrade;
+        ptcProduc = data.ptcProduc;
+        level = data.level;
+        costDecrease = data.costDecrease;
+        ptcDecrease = data.ptcDecrease;
+        levelDecrease = data.levelDecrease;
+        currentTime = data.currentTime;
+    }
 }

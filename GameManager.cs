@@ -11,7 +11,7 @@ using System;
  * */
 public class GameManager : MonoBehaviour
 {
-    public static double coinsCount; // Total of coins the player has
+    public static double coinsCount = 0; // Total of coins the player has
     public GameObject coinsDisplay;
     public GameObject autocoinsStats;
     public double coinsInternal;
@@ -36,11 +36,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void OnApplicationQuit()
+    void Start()
     {
-        //int aux = (int)coinsCount;
-        PlayerPrefs.SetFloat("coinsSaved", (float)coinsCount);
-        PlayerPrefs.SetFloat("cpsSaved", (float)cps);
+        LoadValues();
+    }
+
+        void OnApplicationQuit()
+    {
+        SaveValues();
     }
 
     // Update is called once per frame
@@ -64,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadValues()
     {
-        string path = Path.Combine(Application.persistentDataPath, "char.value");
+        string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
         GameManagerData data = SaveSystem.LoadGameManager(path);
 
         coinsInternal = data.coinsInternal;

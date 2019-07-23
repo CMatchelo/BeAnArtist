@@ -11,12 +11,12 @@ public class CharData
     public double charCoins; // Quantidade de coins por click no char
     public double upgradeValue;
 
-    public CharData(CharBTN charBtn)
+    public CharData(CharManager charManager)
     {
-        ptcCharCoins = charBtn.ptcCharCoins;
-        ptcUpgradeValue = charBtn.ptcUpgradeValue;
-        level = charBtn.level;
-        charCoins = charBtn.charCoins;
-        upgradeValue = charBtn.upgradeValue;
+        ptcCharCoins = charManager.ptcCharCoins;
+        ptcUpgradeValue = charManager.ptcUpgradeValue;
+        level = charManager.level;
+        charCoins = charManager.charCoins;
+        upgradeValue = charManager.upgradeValue;
     }
 }

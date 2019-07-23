@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /*
  * Controls clicks @ mains char
  * */
-public class CharBTN : MonoBehaviour
+public class CharManager : MonoBehaviour
 {
 
     // upgrade_cost  = initialCost * (coefficient)^owned
@@ -44,26 +44,14 @@ public class CharBTN : MonoBehaviour
         upgradeValue = data.upgradeValue;
     }
 
-    void Awake()
-    {
-        LoadCharValues();
-        /*PlayerPrefs.DeleteAll();
-        if (PlayerPrefs.HasKey("level"))
-        {
-            float aux = PlayerPrefs.GetFloat("level", 0);
-            level = (double)aux;
-        }*/
-    }
     void Start()
     {
-        double aux = System.Math.Pow(coefficient, level);
-        upgradeValue = iniUpgradeValue * aux;
+        LoadCharValues();
         upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
     }
 
     void OnApplicationQuit()
     {
-        //PlayerPrefs.SetFloat("level", (float)level);
         SaveCharValues();
     }
 
