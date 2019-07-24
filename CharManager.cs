@@ -82,7 +82,7 @@ public class CharManager : MonoBehaviour
     public void ClickButton()
     {
         //GameManager.coinsCount += charCoins; // Ganha coins ao clicar no char
-        HighValue.makeMoney(charCoins, ptcCharCoins);
+        HighValue.MakeMoney(charCoins, ptcCharCoins);
     }
 
     public void UpgradeProfit()

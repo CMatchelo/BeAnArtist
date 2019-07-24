@@ -14,10 +14,22 @@ public class HighValue : MonoBehaviour
         ptcOut = ptc+1;
     }
 
-    public static void makeMoney (double qty, int ptc)
+    public static void MakeMoney (double qty, int ptc)
     {
         int aux = ptc - GameManager.ptcCoinsCount;
         qty = qty*System.Math.Pow(1000, aux);
         GameManager.coinsCount += qty;
+        print("Aqui");
+    }
+
+    public static void SubtractMoney(double minuendo, double subtraendo, int ptcM, int ptcS, out double result, out int ptcAux)
+    {
+        ptcAux = 0;
+        while ((minuendo - subtraendo) < 1)
+        {
+            minuendo *= 1000;
+            ptcAux++;
+        }
+        result = minuendo - subtraendo;
     }
 }

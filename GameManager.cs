@@ -19,40 +19,25 @@ public class GameManager : MonoBehaviour
     public static int ptcCoinsCount = 0;
     public int ptcCoinsCountInternal = 0;
 
-    void Awake()
-    {
-        //PlayerPrefs.DeleteAll(); // DELETE ALL PREFS LINE *********
-        if (PlayerPrefs.HasKey("coinsSaved"))
-        {
-            float aux = PlayerPrefs.GetFloat("coinsSaved");
-            coinsCount = (float)aux;
-            //
-            aux = PlayerPrefs.GetFloat("cpsSaved");
-            cps = (float)aux;
-        }
-        else
-        {
-            coinsCount = 0;
-        }
-    }
-
     void Start()
     {
         LoadValues();
+        coinsCount = coinsInternal;
     }
 
         void OnApplicationQuit()
     {
+        print(coinsCount + " " + coinsInternal);
+        coinsInternal = coinsCount;
         SaveValues();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (coinsCount > 1000) //////////////////////// if high value
+        if (coinsCount > 1000)
         {
             HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
-            print("entrou no if");
         }
         coinsInternal = System.Math.Round(coinsCount,2);
         coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + " " + HighValue.values[ptcCoinsCount];

@@ -120,8 +120,12 @@ public class ArtsManager : MonoBehaviour
     // produc = (iniProduc * owned) * multipliers
     public void ClickButton()
     {
-        double produc_old = produc;
+        double producOld = produc;
+        int ptcProducOld = ptcProduc;
         GameManager.coinsCount -= upgrade_cost; ////////////////////////////////// subtract money
+        int ptcAux;
+        HighValue.SubtractMoney(GameManager.coinsCount, upgrade_cost, GameManager.ptcCoinsCount, ptcUpgrade, GameManager.coinsCount, aux);
+        GameManager.ptcCoinsCount -= ptcAux;
         level++;
         double aux = System.Math.Pow(Coefficient, level);
         upgrade_cost = initialCost * (aux);
@@ -130,14 +134,19 @@ public class ArtsManager : MonoBehaviour
             HighValue.CalculatePTC(upgrade_cost, ptcUpgrade, out upgrade_cost, out ptcUpgrade);
         }
         produc = (iniProduc * level);
-        GameManager.cps += (produc-produc_old); //////////////////////////////////
+        if (produc >= 1000)
+        {
+            HighValue.CalculatePTC(produc, ptcProduc, out produc, out ptcProduc);
+        }
+        GameManager.cps += (produc- producOld); //////////////////////////////////
     }
     //
     //
     // Auto_money_maker
     IEnumerator makeMoney()
     {
-        GameManager.coinsCount += produc;
+        //GameManager.coinsCount += produc;
+        HighValue.MakeMoney(produc, ptcProduc);
         print("arte" + id + " made " + produc + " coins");
         yield return new WaitForSeconds((float)currentTime);
         makeProfit = false;
@@ -151,7 +160,7 @@ public class ArtsManager : MonoBehaviour
         GameManager.coinsCount -= costDecrease;
         double aux = System.Math.Pow(Coefficient, levelDecrease);
         costDecrease = iniCostDecrease*aux;
-        if (costDecrease > 1000) //////////////////////// if high value
+        if (costDecrease > 1000)
         {
            HighValue.CalculatePTC(costDecrease, ptcDecrease, out costDecrease, out ptcDecrease);
         }
