@@ -22,13 +22,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         LoadValues();
-        coinsCount = coinsInternal;
     }
 
         void OnApplicationQuit()
     {
-        print(coinsCount + " " + coinsInternal);
-        coinsInternal = coinsCount;
         SaveValues();
     }
 
@@ -37,15 +34,16 @@ public class GameManager : MonoBehaviour
     {
         if (coinsCount > 1000)
         {
-            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
+            HighValue.CalculatePTC(coinsCount, out coinsCount, out ptcCoinsCount);
         }
-        coinsInternal = System.Math.Round(coinsCount,2);
-        coinsDisplay.GetComponent<Text>().text = "" + coinsInternal + " " + HighValue.values[ptcCoinsCount];
+        coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
 
     public void SaveValues()
     {
+        coinsInternal = coinsCount;
+        ptcCoinsCountInternal = ptcCoinsCount;
         string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
         SaveSystem.SaveGameManager(this, path);
     }
@@ -55,7 +53,7 @@ public class GameManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
         GameManagerData data = SaveSystem.LoadGameManager(path);
 
-        coinsInternal = data.coinsInternal;
-        ptcCoinsCountInternal = data.ptcCoinsCountInternal;
+        coinsCount = data.coinsInternal;
+        ptcCoinsCount = data.ptcCoinsCountInternal;
     }
 }

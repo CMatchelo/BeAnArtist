@@ -8,10 +8,16 @@ public class HighValue : MonoBehaviour
 {
     public static string[] values = new string[]
     { " ", "K", "M", "B", "T", "Q", "AA", "AB", "AC", "AD", "AE", "AF",  "AG" };
-    public static void CalculatePTC(double value, int ptc, out double valueOut, out int ptcOut)
+    public static void CalculatePTC(double value, out double valueOut, out int ptcOut)
     {
+        int ptc = 0;
+        while (value > 1000)
+        {
+            value = value / 1000;
+            ptc++;
+        }
         valueOut = System.Math.Round(value / 1000, 2);
-        ptcOut = ptc+1;
+        ptcOut = ptc;
     }
 
     public static void MakeMoney (double qty, int ptc)

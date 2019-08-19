@@ -59,17 +59,13 @@ public class CharManager : MonoBehaviour
     {
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
-        //double nextCoins = iniCharCoins * level + 2;
-        if (level>0)
-        {
-            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
-        }
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
         // Verifies if enough money to buy upgrade
-        if ((ptcCharCoins < ptcQtyCoins))
+        if ((ptcUpgradeValue < ptcQtyCoins))
         {
-            upgProfitActive.interactable = false;
+            upgProfitActive.interactable = true;
         }
-        else if (qtyCoins >= upgradeValue)
+        else if (qtyCoins >= upgradeValue && ptcUpgradeValue == ptcQtyCoins)
         {
             upgProfitActive.interactable = true;
         }
@@ -81,24 +77,26 @@ public class CharManager : MonoBehaviour
 
     public void ClickButton()
     {
-        //GameManager.coinsCount += charCoins; // Ganha coins ao clicar no char
         HighValue.MakeMoney(charCoins, ptcCharCoins);
     }
 
     public void UpgradeProfit()
     {
-        GameManager.coinsCount -= upgradeValue; ///////// Spent
+        //GameManager.coinsCount -= upgradeValue; ///////// Spent
+        int ptcAux;
+        HighValue.SubtractMoney(GameManager.coinsCount, upgradeValue, GameManager.ptcCoinsCount, ptcUpgradeValue, out GameManager.coinsCount, out ptcAux);
+        GameManager.ptcCoinsCount -= ptcAux;
         level++;
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
         if (upgradeValue > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(upgradeValue, ptcUpgradeValue, out upgradeValue, out ptcUpgradeValue);
+            HighValue.CalculatePTC(upgradeValue, out upgradeValue, out ptcUpgradeValue);
         }
         charCoins += 1;
         if (charCoins > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
+            HighValue.CalculatePTC(charCoins, out charCoins, out ptcCharCoins);
         }
     }
 }
