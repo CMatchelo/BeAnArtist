@@ -59,7 +59,7 @@ public class CharManager : MonoBehaviour
     {
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
         // Verifies if enough money to buy upgrade
         if ((ptcUpgradeValue < ptcQtyCoins))
         {
@@ -91,12 +91,12 @@ public class CharManager : MonoBehaviour
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
         if (upgradeValue > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(upgradeValue, out upgradeValue, out ptcUpgradeValue);
+            HighValue.CalculatePTC(upgradeValue, 0, out upgradeValue, out ptcUpgradeValue);
         }
         charCoins += 1;
         if (charCoins > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(charCoins, out charCoins, out ptcCharCoins);
+            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
         }
     }
 }

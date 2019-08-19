@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         if (coinsCount > 1000)
         {
-            HighValue.CalculatePTC(coinsCount, out coinsCount, out ptcCoinsCount);
+            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
         }
         coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
