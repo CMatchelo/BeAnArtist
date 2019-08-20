@@ -161,7 +161,7 @@ public class ArtsManager : MonoBehaviour
         costDecrease = iniCostDecrease*aux;
         if (costDecrease > 1000)
         {
-           HighValue.CalculatePTC(costDecrease, 0, out costDecrease, out ptcDecrease);
+            HighValue.CalculatePTC(costDecrease, 0, out costDecrease, out ptcDecrease);
         }
         currentTime = time/levelDecrease;
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];

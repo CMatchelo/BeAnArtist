@@ -62,7 +62,7 @@ public class CharManager : MonoBehaviour
     {
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(displayUpgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
         // Verifies if enough money to buy upgrade
         if ((ptcUpgradeValue < ptcQtyCoins))
         {
@@ -80,26 +80,25 @@ public class CharManager : MonoBehaviour
 
     public void ClickButton()
     {
-        GameManager.coinsCount +=  charCoins;
+        HighValue.MakeMoney(charCoins, ptcCharCoins);
     }
 
     public void UpgradeProfit()
     {
         //GameManager.coinsCount -= upgradeValue; ///////// Spent
-        GameManager.coinsCount = GameManager.coinsCount - upgradeValue;
+        HighValue.SubtractMoney(GameManager.coinsCount, upgradeValue, GameManager.ptcCoinsCount, ptcUpgradeValue, out GameManager.coinsCount, out int ptcAux);
+        GameManager.ptcCoinsCount -= ptcAux;
         level++;
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
         if (upgradeValue > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(upgradeValue, 0, out displayUpgradeValue, out ptcUpgradeValue);
-            print("entrou");
+            HighValue.CalculatePTC(upgradeValue, 0, out upgradeValue, out ptcUpgradeValue);
         }
         charCoins += 1;
         if (charCoins > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(charCoins, ptcCharCoins, out displayCharCoins, out ptcCharCoins);
-            print("entrou2");
+            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
         }
     }
 }
