@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public static double cps;      // Coins per second the player is making
     public static int ptcCoinsCount = 0;
     public int ptcCoinsCountInternal = 0;
+    public double displayCoinsCount;
 
     void Start()
     {
@@ -34,9 +35,10 @@ public class GameManager : MonoBehaviour
     {
         if (coinsCount > 1000)
         {
-            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
+            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out displayCoinsCount, out ptcCoinsCount);
         }
-        coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
+        print(ptcCoinsCount);
+        coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(displayCoinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps;
     }
 

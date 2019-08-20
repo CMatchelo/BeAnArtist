@@ -25,7 +25,10 @@ public class CharManager : MonoBehaviour
     public GameObject upgProfitActiveTXT;
     public double qtyCoins;
     public int ptcQtyCoins;
-    
+    public double displayUpgradeValue;
+    public double displayCharCoins;
+
+
     public void SaveCharValues()
     {
         string path = Path.Combine(Application.persistentDataPath, "char.value");
@@ -59,7 +62,7 @@ public class CharManager : MonoBehaviour
     {
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(displayUpgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
         // Verifies if enough money to buy upgrade
         if ((ptcUpgradeValue < ptcQtyCoins))
         {
@@ -77,26 +80,26 @@ public class CharManager : MonoBehaviour
 
     public void ClickButton()
     {
-        HighValue.MakeMoney(charCoins, ptcCharCoins);
+        GameManager.coinsCount +=  charCoins;
     }
 
     public void UpgradeProfit()
     {
         //GameManager.coinsCount -= upgradeValue; ///////// Spent
-        int ptcAux;
-        HighValue.SubtractMoney(GameManager.coinsCount, upgradeValue, GameManager.ptcCoinsCount, ptcUpgradeValue, out GameManager.coinsCount, out ptcAux);
-        GameManager.ptcCoinsCount -= ptcAux;
+        GameManager.coinsCount = GameManager.coinsCount - upgradeValue;
         level++;
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
         if (upgradeValue > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(upgradeValue, 0, out upgradeValue, out ptcUpgradeValue);
+            HighValue.CalculatePTC(upgradeValue, 0, out displayUpgradeValue, out ptcUpgradeValue);
+            print("entrou");
         }
         charCoins += 1;
         if (charCoins > 1000) //////////////////////// if high value
         {
-            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
+            HighValue.CalculatePTC(charCoins, ptcCharCoins, out displayCharCoins, out ptcCharCoins);
+            print("entrou2");
         }
     }
 }
