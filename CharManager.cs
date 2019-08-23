@@ -27,6 +27,7 @@ public class CharManager : MonoBehaviour
     public int ptcQtyCoins;
     public double displayUpgradeValue;
     public double displayCharCoins;
+    public static double displayCoinsClick;
 
 
     public void SaveCharValues()
@@ -45,6 +46,7 @@ public class CharManager : MonoBehaviour
         level = data.level;
         charCoins = data.charCoins;
         upgradeValue = data.upgradeValue;
+        displayCoinsClick = charCoins;
     }
 
     void Start()
@@ -80,14 +82,14 @@ public class CharManager : MonoBehaviour
 
     public void ClickButton()
     {
-        HighValue.MakeMoney(charCoins, ptcCharCoins);
+        HighValue.MakeMoney(charCoins, ptcCharCoins, out double qtyOut, out int ptcOut);
+        GameManager.coinsCount += qtyOut;
     }
 
     public void UpgradeProfit()
     {
-        //GameManager.coinsCount -= upgradeValue; ///////// Spent
         HighValue.SubtractMoney(GameManager.coinsCount, upgradeValue, GameManager.ptcCoinsCount, ptcUpgradeValue, out GameManager.coinsCount, out int ptcAux);
-        GameManager.ptcCoinsCount -= ptcAux;
+        GameManager.ptcCoinsCount = ptcAux;
         level++;
         double aux = System.Math.Pow(coefficient, level);
         upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
@@ -95,10 +97,12 @@ public class CharManager : MonoBehaviour
         {
             HighValue.CalculatePTC(upgradeValue, 0, out upgradeValue, out ptcUpgradeValue);
         }
-        charCoins += 1;
+        int aux2 = 0 - ptcCharCoins;
+        charCoins = charCoins + (100 * System.Math.Pow(1000, aux2));
         if (charCoins > 1000) //////////////////////// if high value
         {
             HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
         }
+        displayCoinsClick = charCoins;
     }
 }
