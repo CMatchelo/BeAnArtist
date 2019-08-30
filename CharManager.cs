@@ -53,6 +53,8 @@ public class CharManager : MonoBehaviour
     {
         LoadCharValues();
         upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
+        charCoins *= (System.Math.Pow(10, GameManager.levelGeral));
+        iniUpgradeValue *= (System.Math.Pow(10, GameManager.levelGeral));
     }
 
     void OnApplicationQuit()

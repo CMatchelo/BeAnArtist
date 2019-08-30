@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public static int cpsPTC=0;
     public static int ptcCoinsCount = 0;
     public int ptcCoinsCountInternal = 0;
+    public static int levelGeral = 0;
 
     void Start()
     {
