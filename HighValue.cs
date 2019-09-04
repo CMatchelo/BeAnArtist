@@ -38,4 +38,12 @@ public class HighValue : MonoBehaviour
         }
         ptc = ptcAux;
     }
+
+    public static void IniStats(double value, int ptc, out double valueOut, out int ptcOut)
+    {
+        value *= (System.Math.Pow(10, GameManager.levelGeral));
+        HighValue.CalculatePTC(value, ptc, out value, out ptc);
+        ptcOut = ptc;
+        valueOut = value;
+    }
 }

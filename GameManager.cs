@@ -14,12 +14,13 @@ public class GameManager : MonoBehaviour
     public static double coinsCount = 0; // Total of coins the player has
     public GameObject coinsDisplay;
     public GameObject autocoinsStats;
+    public GameObject levelDisplay;
     public double coinsInternal;
     public static double cps;      // Coins per second the player is making
     public static int cpsPTC=0;
     public static int ptcCoinsCount = 0;
     public int ptcCoinsCountInternal = 0;
-    public static int levelGeral = 0;
+    public static int levelGeral = 8;
 
     void Start()
     {
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
         coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps + " " + cpsPTC + " " + CharManager.displayCoinsClick;
+        levelDisplay.GetComponent<Text>().text = "Rede Social: " + LevelManager.social[levelGeral%3] + " Country: " + LevelManager.country[levelGeral/3];
     }
 
     public void SaveValues()

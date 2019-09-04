@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-//using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -14,16 +13,20 @@ public class ArtsManager : MonoBehaviour
     public int id;
     public double qtyCoins;
     public int ptcQtyCoins;
-    public bool makeProfit = false;
+    public static bool makeProfit = false;
     public double level;
-
-    public double initialCost;
-    public double upgrade_cost;
     public double Coefficient;
+
+    public double upgradeCost;
+    public double initialCost;
+    public int ptcUpgradeCost;
+    public int ptcInitialCost;
+
     public double iniProduc;
     public double produc;
-    public int ptcUpgrade;
     public int ptcProduc;
+    public int ptcIniProduc;
+
     public Button activeBTN;
     public GameObject activeTXT;
 
@@ -31,14 +34,13 @@ public class ArtsManager : MonoBehaviour
     public double currentTime;
     public double costDecrease;
     public double iniCostDecrease;
+    public int ptcDecrease;
+    public int iniCostDecreasePtc;
     public double levelDecrease=1;
-    public int ptcDecrease = 0;
+    
     public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
 
-    public int initialCostPtc;
-    public int iniProducPtc;
-    public int iniCostDecreasePtc;
 
     void OnApplicationQuit()
     {
@@ -47,31 +49,21 @@ public class ArtsManager : MonoBehaviour
 
     void Start()
     {
-        IniStats(initialCost, ptcUpgrade, out initialCost, out initialCostPtc);
-        IniStats(iniProduc, ptcProduc, out iniProduc, out iniProducPtc);
-        IniStats(iniCostDecrease, ptcDecrease, out iniCostDecrease, out iniCostDecreasePtc);
-
-        void IniStats(double value, int ptc, out double valueOut, out int ptcOut)
-        {
-            value *= (System.Math.Pow(10, GameManager.levelGeral));
-            HighValue.CalculatePTC(value, ptc, out value, out ptc);
-            ptcOut = ptc;
-            valueOut = value;
-        }
         LoadValues();
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
         if (level > 0)
         {
             decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
-            activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgrade_cost, 2) + " " + HighValue.values[ptcUpgrade];
+            activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgradeCost, 2) + " " + HighValue.values[ptcUpgradeCost];
             makeProfit = true;
             StartCoroutine(makeMoney());
         }
         else
         {
-            activeTXT.GetComponent<Text>().text = "Post art - $" + System.Math.Round(initialCost, 2) + " " + HighValue.values[initialCostPtc];
+            activeTXT.GetComponent<Text>().text = "Post - $" + System.Math.Round(initialCost, 2) + " " + HighValue.values[ptcInitialCost];
             decreaseTimeTXT.GetComponent<Text>().text = "Post your art before upgrade it";
+            print(initialCost);
         }
         if (levelDecrease == 0 && level > 0)
         {
@@ -90,17 +82,20 @@ public class ArtsManager : MonoBehaviour
             StartCoroutine(makeMoney());
         }
         //Verifies if enough money to upgrade art
-        if (ptcUpgrade < ptcQtyCoins) 
+        if (ptcUpgradeCost < ptcQtyCoins) 
         {
             activeBTN.interactable = true;
+            print("if 1");
         }
-        else if (qtyCoins >= upgrade_cost && ptcUpgrade == ptcQtyCoins)
+        else if (qtyCoins >= upgradeCost && ptcUpgradeCost == ptcQtyCoins)
         {
             activeBTN.interactable = true;
+            print("if 2");
         }
         else
         {
             activeBTN.interactable = false;
+            print("if 3");
         }
        
         // Verifies if enough money to downgrade time to profit
@@ -126,21 +121,21 @@ public class ArtsManager : MonoBehaviour
     {
         double producOld = produc;
         int ptcProducOld = ptcProduc;
-        HighValue.SubtractMoney(GameManager.coinsCount, upgrade_cost, GameManager.ptcCoinsCount, ptcUpgrade, out GameManager.coinsCount, out GameManager.ptcCoinsCount);
+        HighValue.SubtractMoney(GameManager.coinsCount, upgradeCost, GameManager.ptcCoinsCount, ptcUpgradeCost, out GameManager.coinsCount, out GameManager.ptcCoinsCount);
         level++;
         double aux = System.Math.Pow(Coefficient, level);
-        upgrade_cost = initialCost * System.Math.Pow(1000, initialCostPtc) * (aux);
-        if (upgrade_cost >= 1000)
+        upgradeCost = initialCost * System.Math.Pow(1000, ptcInitialCost) * (aux);
+        if (upgradeCost >= 1000)
         {
-            HighValue.CalculatePTC(upgrade_cost, 0, out upgrade_cost, out ptcUpgrade);
+            HighValue.CalculatePTC(upgradeCost, 0, out upgradeCost, out ptcUpgradeCost);
         }
-        produc = (iniProduc * System.Math.Pow(1000, iniProducPtc) * level);
+        produc = (iniProduc * System.Math.Pow(1000, ptcIniProduc) * level);
         if (produc >= 1000)
         {
             HighValue.CalculatePTC(produc, 0, out produc, out ptcProduc);
         }
         GameManager.cps += (produc- producOld); //////////////////////////////////
-        activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgrade_cost, 2) + " " + HighValue.values[ptcUpgrade];
+        activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgradeCost, 2) + " " + HighValue.values[ptcUpgradeCost];
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
         CalculateCPS(currentTime, produc, ptcProduc, out GameManager.cps, out GameManager.cpsPTC);
     }
@@ -198,6 +193,27 @@ public class ArtsManager : MonoBehaviour
     }
     //
     //
+    //
+    public void UpLevel()
+    {
+        HighValue.IniStats(initialCost, ptcInitialCost, out initialCost, out ptcInitialCost);
+        HighValue.IniStats(iniProduc, ptcIniProduc, out iniProduc, out ptcIniProduc);
+        HighValue.IniStats(iniCostDecrease, iniCostDecreasePtc, out iniCostDecrease, out iniCostDecreasePtc);
+        upgradeCost = initialCost;
+        ptcUpgradeCost = ptcInitialCost;
+        produc = iniProduc;
+        ptcProduc = ptcIniProduc;
+        costDecrease = iniCostDecrease;
+        ptcDecrease = iniCostDecreasePtc;
+        levelDecrease = 1;
+        currentTime = time / levelDecrease;
+        makeProfit = false;
+        level = 0;
+        activeTXT.GetComponent<Text>().text = "Post art - $" + System.Math.Round(initialCost, 2) + " " + HighValue.values[ptcInitialCost];
+        decreaseTimeTXT.GetComponent<Text>().text = "Post your art before upgrade it";
+    }
+    //
+    //
     // Save & Load functions
     public void SaveValues()
     {
@@ -210,9 +226,9 @@ public class ArtsManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, id+"artsManager.value");
         ArtsData data = SaveSystem.LoadArts(path);
 
-        upgrade_cost = data.upgrade_cost;
+        upgradeCost = data.upgrade_cost;
         produc = data.produc;
-        ptcUpgrade = data.ptcUpgrade;
+        ptcUpgradeCost = data.ptcUpgrade;
         ptcProduc = data.ptcProduc;
         level = data.level;
         costDecrease = data.costDecrease;

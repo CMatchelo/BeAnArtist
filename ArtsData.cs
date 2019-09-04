@@ -18,9 +18,9 @@ public class ArtsData
 
     public ArtsData(ArtsManager artsManager)
     {
-        upgrade_cost = artsManager.upgrade_cost;
+        upgrade_cost = artsManager.upgradeCost;
         produc = artsManager.produc;
-        ptcUpgrade = artsManager.ptcUpgrade;
+        ptcUpgrade = artsManager.ptcUpgradeCost;
         ptcProduc = artsManager.ptcProduc;
         level = artsManager.level;
         costDecrease = artsManager.costDecrease;
