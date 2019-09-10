@@ -7,10 +7,12 @@ public class GameManagerData
 {
     public double coinsInternal;
     public int ptcCoinsCountInternal;
+    public int levelGerAux;
 
     public GameManagerData(GameManager gameManager)
     {
         coinsInternal = gameManager.coinsInternal;
         ptcCoinsCountInternal = gameManager.ptcCoinsCountInternal;
+        levelGerAux = gameManager.levelGerAux;
     }
 }

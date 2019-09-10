@@ -14,20 +14,21 @@ public class CharManager : MonoBehaviour
 
     // upgrade_cost  = initialCost * (coefficient)^owned
     // produc = (iniProduc * owned) * multipliers
-    public int ptcCharCoins = 0;
-    public int ptcUpgradeValue = 0;
+
+    public double iniUpgradeValue;
     public int IniPTCUpgradeValue = 0;
-    public double charCoins; // Quantidade de coins por click no char
     public double upgradeValue;
-    public static double iniUpgradeValue;
+    public int ptcUpgradeValue;
+    public double charCoins; // Quantidade de coins por click no char
+    public int ptcCharCoins;
     public double coefficient;
     public double level;
+
     public Button upgProfitActive;
     public GameObject upgProfitActiveTXT;
+
     public double qtyCoins;
     public int ptcQtyCoins;
-    public double displayUpgradeValue;
-    public double displayCharCoins;
     public static double displayCoinsClick;
 
 
@@ -36,7 +37,12 @@ public class CharManager : MonoBehaviour
         // adicionar para quando subir de level
         // charCoins *= System.Math.Pow(10, GameManager.levelGeral);
         LoadCharValues();
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
+        if (level == 0)
+        {
+            ptcUpgradeValue = IniPTCUpgradeValue;
+            upgradeValue = iniUpgradeValue;
+        }
+            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
     }
 
     void OnApplicationQuit()

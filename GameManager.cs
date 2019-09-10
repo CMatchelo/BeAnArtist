@@ -20,7 +20,8 @@ public class GameManager : MonoBehaviour
     public static int cpsPTC=0;
     public static int ptcCoinsCount = 0;
     public int ptcCoinsCountInternal = 0;
-    public static int levelGeral = 8;
+    public static int levelGeral = 0;
+    public int levelGerAux;
 
     void Start()
     {
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     public void SaveValues()
     {
+        levelGerAux = levelGeral;
         coinsInternal = coinsCount;
         ptcCoinsCountInternal = ptcCoinsCount;
         string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
@@ -55,7 +57,7 @@ public class GameManager : MonoBehaviour
     {
         string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
         GameManagerData data = SaveSystem.LoadGameManager(path);
-
+        levelGeral = levelGerAux;
         coinsCount = data.coinsInternal;
         ptcCoinsCount = data.ptcCoinsCountInternal;
     }
