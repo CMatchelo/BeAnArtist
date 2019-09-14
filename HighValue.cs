@@ -8,6 +8,7 @@ public class HighValue : MonoBehaviour
 {
     public static string[] values = new string[]
     { " ", "K", "M", "B", "T", "Q", "AA", "AB", "AC", "AD", "AE", "AF",  "AG" };
+
     public static void CalculatePTC(double value, int ptc, out double valueOut, out int ptcOut)
     {
         while (value > 1000)

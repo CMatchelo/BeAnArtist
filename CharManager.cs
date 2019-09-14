@@ -42,7 +42,7 @@ public class CharManager : MonoBehaviour
             ptcUpgradeValue = IniPTCUpgradeValue;
             upgradeValue = iniUpgradeValue;
         }
-            upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
     }
 
     void OnApplicationQuit()

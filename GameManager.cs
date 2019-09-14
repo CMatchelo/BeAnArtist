@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 
+
 /*
  * Controls UI 
  * Controls QTY coins
@@ -23,12 +24,28 @@ public class GameManager : MonoBehaviour
     public static int levelGeral = 0;
     public int levelGerAux;
 
+    DateTime oldDate;
+
     void Start()
     {
+        long temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
+        DateTime oldDate = DateTime.FromBinary(temp);
+        var diffInSeconds = (System.DateTime.Now - oldDate).TotalSeconds;
+        print("Difference: " + diffInSeconds + " " + cps);
         LoadValues();
+        if (cps > 1000)
+        {
+            HighValue.CalculatePTC(cps, 0, out cps, out int ptcOut);
+        }
+        coinsCount += cps; ///////////////////
+        HighValue.MakeMoney(cps, 0, out cps, out cpsPTC);
+        print(cps);
+        coinsCount += cps * diffInSeconds;
     }
+
     void OnApplicationQuit()
     {
+        PlayerPrefs.SetString("sysString", System.DateTime.Now.ToBinary().ToString());
         SaveValues();
     }
 
@@ -41,7 +58,7 @@ public class GameManager : MonoBehaviour
         }
         coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps + " " + cpsPTC + " " + CharManager.displayCoinsClick;
-        levelDisplay.GetComponent<Text>().text = "Rede Social: " + LevelManager.social[levelGeral%3] + " Country: " + LevelManager.country[levelGeral/3];
+        //levelDisplay.GetComponent<Text>().text = "Rede Social: " + LevelManager.social[levelGeral%3] + " Country: " + LevelManager.country[levelGeral/3];
     }
 
     public void SaveValues()

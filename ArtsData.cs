@@ -10,7 +10,7 @@ public class ArtsData
     public int ptcUpgrade;
     public int ptcProduc;
     public double level;
-
+    public double cps;
     public double costDecrease;
     public int ptcDecrease;
     public double levelDecrease;
@@ -27,5 +27,6 @@ public class ArtsData
         ptcDecrease = artsManager.ptcDecrease;
         levelDecrease = artsManager.levelDecrease;
         currentTime = artsManager.currentTime;
+        cps = artsManager.cps;
     }
 }
