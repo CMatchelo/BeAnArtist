@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 
-
+// 139 38 14
 /*
  * Controls UI 
  * Controls QTY coins
@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public GameObject coinsDisplay;
     public GameObject autocoinsStats;
     public GameObject levelDisplay;
+    public GameObject multQtyBTN;
+    public GameObject multQtyTXT;
     public double coinsInternal;
     public static double cps;      // Coins per second the player is making
     public static int cpsPTC=0;
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     public int ptcCoinsCountInternal = 0;
     public static int levelGeral = 0;
     public int levelGerAux;
+    public static int multQty=1;
 
     DateTime oldDate;
 
