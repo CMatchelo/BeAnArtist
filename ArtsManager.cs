@@ -14,16 +14,15 @@ public class ArtsManager : MonoBehaviour
     public double qtyCoins;
     public int ptcQtyCoins;
     public static bool makeProfit = false;
-    public double level;
+    public int level;
     public double Coefficient;
     public double cps;
+    public int multQty;
 
     public double upgradeCost;
     public double initialCost;
     public int ptcUpgradeCost;
     public int ptcInitialCost;
-    public double showUpgCost;
-    public int ptcShowUpgCost;
 
     public double iniProduc;
     public double produc;
@@ -45,6 +44,7 @@ public class ArtsManager : MonoBehaviour
     
     public Button decreaseTimeBTN;
     public GameObject decreaseTimeTXT;
+
 
 
     void OnApplicationQuit()
@@ -69,11 +69,9 @@ public class ArtsManager : MonoBehaviour
         ptcQtyCoins = GameManager.ptcCoinsCount;
         if (level > 0)
         {
-            CalcUpgCost();
+            CalcUpgCost(0);
             CalcProduc();
             CalcDecreasCost();
-            showUpgCost = upgradeCost;
-            ptcShowUpgCost = ptcUpgradeCost;
             WriteValues();
             makeProfit = true;
             StartCoroutine(makeMoney());
@@ -97,43 +95,18 @@ public class ArtsManager : MonoBehaviour
     }
 
 
-    void MultQty()
+    public void MultQty()
     {
-        ptcShowUpgCost = ptcUpgradeCost;
-        if (GameManager.multQty == 1)
+        multQty++;
+        if (multQty > 2)
         {
-            showUpgCost = upgradeCost;
+            multQty = 0;
         }
-        if (GameManager.multQty == 10)
-        {
-            showUpgCost = upgradeCost * 10;
-            if(showUpgCost>1000)
-            {
-                HighValue.CalculatePTC(showUpgCost, ptcShowUpgCost, out showUpgCost, out ptcShowUpgCost);
-            }  
-        }
-        if (GameManager.multQty == 50)
-        {
-            showUpgCost = upgradeCost * 50;
-            if (showUpgCost > 1000)
-            {
-                HighValue.CalculatePTC(showUpgCost, ptcShowUpgCost, out showUpgCost, out ptcShowUpgCost);
-            }
-        }
-    }
-
-    void CalcMultPrice()
-    {
-        int i = 0;
-        while (i < GameManager.multQty)
-        {
-            i++;
-        }
+        CalcUpgCost(HighValue.multQty[multQty]);
     }
 
     void Update()
     {
-        makeProfit = false;
         qtyCoins = GameManager.coinsCount;
         ptcQtyCoins = GameManager.ptcCoinsCount;
         // Verifies if art is active
@@ -143,11 +116,11 @@ public class ArtsManager : MonoBehaviour
             StartCoroutine(makeMoney());
         }
         //Verifies if enough money to upgrade art
-        if (ptcShowUpgCost < ptcQtyCoins) 
+        if (ptcUpgradeCost < ptcQtyCoins) 
         {
             activeBTN.interactable = true;
         }
-        else if (qtyCoins >= showUpgCost && ptcUpgradeCost == ptcShowUpgCost)
+        else if (qtyCoins >= upgradeCost && ptcUpgradeCost == ptcQtyCoins)
         {
             activeBTN.interactable = true;
         }
@@ -176,10 +149,9 @@ public class ArtsManager : MonoBehaviour
     public void ClickButton()
     {
         HighValue.SubtractMoney(GameManager.coinsCount, upgradeCost, GameManager.ptcCoinsCount, ptcUpgradeCost, out GameManager.coinsCount, out GameManager.ptcCoinsCount);
-        level++;
-        CalcUpgCost();
+        level += HighValue.multQty[multQty];
+        CalcUpgCost(HighValue.multQty[multQty]);
         CalcProduc();
-        WriteValues();
         cps = (produc * (System.Math.Pow(1000, ptcProduc))) / currentTime;
         ShowCPS();
     }
@@ -199,13 +171,19 @@ public class ArtsManager : MonoBehaviour
     //
     //
     // Calculate cost to upgrade art
-    public void CalcUpgCost()
+    void CalcUpgCost(int total)
     {
-        double aux = System.Math.Pow(Coefficient, level);
-        upgradeCost = initialCost * System.Math.Pow(1000, ptcInitialCost) * (aux);
-        if (upgradeCost >= 1000)
+        int levelAUx = level;
+        for (int i = 0; i<total; i++)
         {
-            HighValue.CalculatePTC(upgradeCost, ptcUpgradeCost, out upgradeCost, out ptcUpgradeCost);
+            double aux = System.Math.Pow(Coefficient, levelAUx);
+            upgradeCost = initialCost * (aux);
+            if (upgradeCost >= 1000)
+            {
+                HighValue.CalculatePTC(upgradeCost, ptcInitialCost, out upgradeCost, out ptcUpgradeCost);
+            }
+            levelAUx++;
+            WriteValues();
         }
     }
     //
@@ -269,7 +247,7 @@ public class ArtsManager : MonoBehaviour
     public void WriteValues()
     {
         decreaseTimeTXT.GetComponent<Text>().text = "Sell your art" + id + " 2x faster - $" + (System.Math.Round(costDecrease, 2)) + " " + HighValue.values[ptcDecrease];
-        activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgradeCost, 2) + " " + HighValue.values[ptcShowUpgCost];
+        activeTXT.GetComponent<Text>().text = "Boost post - $" + System.Math.Round(upgradeCost, 2) + " " + HighValue.values[ptcUpgradeCost];
         likesTXT.GetComponent<Text>().text = level + " k";
     }
     //

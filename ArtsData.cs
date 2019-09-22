@@ -9,7 +9,7 @@ public class ArtsData
     public double produc;
     public int ptcUpgrade;
     public int ptcProduc;
-    public double level;
+    public int level;
     public double cps;
     public double costDecrease;
     public int ptcDecrease;

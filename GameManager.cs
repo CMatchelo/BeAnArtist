@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 
-// 139 38 14
 /*
  * Controls UI 
  * Controls QTY coins
@@ -25,9 +24,20 @@ public class GameManager : MonoBehaviour
     public int ptcCoinsCountInternal = 0;
     public static int levelGeral = 0;
     public int levelGerAux;
-    public static int multQty=1;
+    public int multQty = 0;
 
     DateTime oldDate;
+
+    public void MultQty()
+    {
+        multQty++;
+        if (multQty > 2)
+        {
+            multQty = 0;
+        }
+        print("aqui");
+        multQtyTXT.GetComponent<Text>().text = "x" + HighValue.multQty[multQty];
+    }
 
     void Start()
     {

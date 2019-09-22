@@ -9,6 +9,9 @@ public class HighValue : MonoBehaviour
     public static string[] values = new string[]
     { " ", "K", "M", "B", "T", "Q", "AA", "AB", "AC", "AD", "AE", "AF",  "AG" };
 
+    public static int[] multQty = new int[]
+    {1, 10, 50};
+
     public static void CalculatePTC(double value, int ptc, out double valueOut, out int ptcOut)
     {
         while (value > 1000)
@@ -27,6 +30,13 @@ public class HighValue : MonoBehaviour
         qtyOut = qty*System.Math.Pow(1000, aux);
     }
 
+    public static void SumMoney(double qty, int ptc, double qty2, int ptc2, out double qtyOut, out int ptcOut)
+    {
+        ptcOut = 0;
+        int aux = ptc - ptc2;
+        qtyOut = qty * System.Math.Pow(1000, aux);
+    }
+
     public static void SubtractMoney(double minuendo, double subtraendo, int ptcM, int ptcS, out double result, out int ptc)
     {
         int ptcAux = 0;
@@ -39,7 +49,7 @@ public class HighValue : MonoBehaviour
         }
         ptc = ptcAux;
     }
-
+    
     public static void IniStats(double value, int ptc, out double valueOut, out int ptcOut)
     {
         value *= (System.Math.Pow(10, GameManager.levelGeral));
