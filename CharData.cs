@@ -13,8 +13,6 @@ public class CharData
 
     public CharData(CharManager charManager)
     {
-        ptcCharCoins = charManager.ptcCharCoins;
-        ptcUpgradeValue = charManager.ptcUpgradeValue;
         level = charManager.level;
         charCoins = charManager.charCoins;
         upgradeValue = charManager.upgradeValue;

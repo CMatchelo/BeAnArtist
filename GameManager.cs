@@ -19,12 +19,10 @@ public class GameManager : MonoBehaviour
     public GameObject multQtyTXT;
     public double coinsInternal;
     public static double cps;      // Coins per second the player is making
-    public static int cpsPTC=0;
-    public static int ptcCoinsCount = 0;
-    public int ptcCoinsCountInternal = 0;
     public static int levelGeral = 0;
     public int levelGerAux;
     public int multQty = 0;
+    public static double followers = 0;
 
     DateTime oldDate;
 
@@ -41,18 +39,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        coinsCount = coinsInternal;
         long temp = Convert.ToInt64(PlayerPrefs.GetString("sysString"));
         DateTime oldDate = DateTime.FromBinary(temp);
         var diffInSeconds = (System.DateTime.Now - oldDate).TotalSeconds;
         print("Difference: " + diffInSeconds + " " + cps);
         LoadValues();
-        if (cps > 1000)
-        {
-            HighValue.CalculatePTC(cps, 0, out cps, out int ptcOut);
-        }
-        coinsCount += cps; ///////////////////
-        HighValue.MakeMoney(cps, 0, out cps, out cpsPTC);
-        print(cps);
         coinsCount += cps * diffInSeconds;
     }
 
@@ -65,20 +57,23 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (coinsCount > 1000)
-        {
-            HighValue.CalculatePTC(coinsCount, ptcCoinsCount, out coinsCount, out ptcCoinsCount);
-        }
-        coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(coinsCount, 2) + " " + HighValue.values[ptcCoinsCount];
+        SumFollowers();
+        HighValue.CalculatePTC(coinsCount, out double showCoinsCount, out int ptcOut);
+        coinsDisplay.GetComponent<Text>().text = "" + System.Math.Round(showCoinsCount, 2) + " " + HighValue.values[ptcOut];
+        HighValue.CalculatePTC(cps, out cps, out int cpsPTC);
         autocoinsStats.GetComponent<Text>().text = "Sellings @: " + cps + " " + cpsPTC + " " + CharManager.displayCoinsClick;
-        //levelDisplay.GetComponent<Text>().text = "Rede Social: " + LevelManager.social[levelGeral%3] + " Country: " + LevelManager.country[levelGeral/3];
+        levelDisplay.GetComponent<Text>().text = "Rede Social: " + LevelManager.social[levelGeral%3] + " Country: " + LevelManager.country[levelGeral/3];
+    }
+
+    public void SumFollowers()
+    {
+        followers += System.Math.Round(150 * System.Math.Sqrt(GameManager.coinsCount / System.Math.Pow(10, 15)), 0);
     }
 
     public void SaveValues()
     {
         levelGerAux = levelGeral;
         coinsInternal = coinsCount;
-        ptcCoinsCountInternal = ptcCoinsCount;
         string path = Path.Combine(Application.persistentDataPath, "gameManager.value");
         SaveSystem.SaveGameManager(this, path);
     }
@@ -89,6 +84,5 @@ public class GameManager : MonoBehaviour
         GameManagerData data = SaveSystem.LoadGameManager(path);
         levelGeral = levelGerAux;
         coinsCount = data.coinsInternal;
-        ptcCoinsCount = data.ptcCoinsCountInternal;
     }
 }

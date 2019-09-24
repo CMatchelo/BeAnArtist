@@ -16,11 +16,8 @@ public class CharManager : MonoBehaviour
     // produc = (iniProduc * owned) * multipliers
 
     public double iniUpgradeValue;
-    public int IniPTCUpgradeValue = 0;
     public double upgradeValue;
-    public int ptcUpgradeValue;
     public double charCoins; // Quantidade de coins por click no char
-    public int ptcCharCoins;
     public double coefficient;
     public double level;
 
@@ -28,7 +25,6 @@ public class CharManager : MonoBehaviour
     public GameObject upgProfitActiveTXT;
 
     public double qtyCoins;
-    public int ptcQtyCoins;
     public static double displayCoinsClick;
 
 
@@ -37,12 +33,10 @@ public class CharManager : MonoBehaviour
         // adicionar para quando subir de level
         // charCoins *= System.Math.Pow(10, GameManager.levelGeral);
         LoadCharValues();
-        if (level == 0)
-        {
-            ptcUpgradeValue = IniPTCUpgradeValue;
-            upgradeValue = iniUpgradeValue;
-        }
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2);
+        double aux = System.Math.Pow(coefficient, level);
+        upgradeValue = iniUpgradeValue * aux;
+        HighValue.CalculatePTC(upgradeValue, out upgradeValue, out int ptcUpgValue);
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2) + " " + HighValue.values[ptcUpgValue];
     }
 
     void OnApplicationQuit()
@@ -52,15 +46,8 @@ public class CharManager : MonoBehaviour
 
     void Update()
     {
-        qtyCoins = GameManager.coinsCount;
-        ptcQtyCoins = GameManager.ptcCoinsCount;
-        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(upgradeValue, 2) + " " + HighValue.values[ptcUpgradeValue];
-        // Verifies if enough money to buy upgrade
-        if ((ptcUpgradeValue < ptcQtyCoins))
-        {
-            upgProfitActive.interactable = true;
-        }
-        else if (qtyCoins >= upgradeValue && ptcUpgradeValue == ptcQtyCoins)
+        //Verifies if enough money to buy upgrade
+        if (GameManager.coinsCount >= upgradeValue)
         {
             upgProfitActive.interactable = true;
         }
@@ -72,27 +59,19 @@ public class CharManager : MonoBehaviour
 
     public void ClickButton()
     {
-        HighValue.MakeMoney(charCoins, ptcCharCoins, out double qtyOut, out int ptcOut);
-        GameManager.coinsCount += qtyOut;
+        GameManager.coinsCount += charCoins;
     }
 
     public void UpgradeProfit()
     {
-        HighValue.SubtractMoney(GameManager.coinsCount, upgradeValue, GameManager.ptcCoinsCount, ptcUpgradeValue, out GameManager.coinsCount, out int ptcAux);
-        GameManager.ptcCoinsCount = ptcAux;
+        GameManager.coinsCount -= upgradeValue;
         level++;
         double aux = System.Math.Pow(coefficient, level);
-        upgradeValue = System.Math.Round(iniUpgradeValue * aux, 2);
-        if (upgradeValue > 1000) //////////////////////// if high value
-        {
-            HighValue.CalculatePTC(upgradeValue, 0, out upgradeValue, out ptcUpgradeValue);
-        }
+        upgradeValue = iniUpgradeValue * aux;
         charCoins++;
-        if (charCoins >= 1000) //////////////////////// if high value
-        {
-            HighValue.CalculatePTC(charCoins, ptcCharCoins, out charCoins, out ptcCharCoins);
-        }
         displayCoinsClick = charCoins;
+        HighValue.CalculatePTC(upgradeValue, out double showUpgValue, out int ptcUpgradeValue);
+        upgProfitActiveTXT.GetComponent<Text>().text = "Make +1 coins by clicking - $" + System.Math.Round(showUpgValue, 2) + " " + HighValue.values[ptcUpgradeValue];
     }
 
     public void SaveCharValues()
@@ -106,14 +85,12 @@ public class CharManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, "char.value");
         CharData data = SaveSystem.LoadChar(path);
 
-        ptcCharCoins = data.ptcCharCoins;
-        ptcUpgradeValue = data.ptcUpgradeValue;
         level = data.level;
         charCoins = data.charCoins;
         upgradeValue = data.upgradeValue;
         displayCoinsClick = charCoins;
     }
-
+    /*
     public void UpLevel()
     {
         HighValue.IniStats(iniUpgradeValue, IniPTCUpgradeValue, out iniUpgradeValue, out IniPTCUpgradeValue);
@@ -122,5 +99,5 @@ public class CharManager : MonoBehaviour
         charCoins = 10* GameManager.levelGeral;
         iniUpgradeValue *= (System.Math.Pow(10, GameManager.levelGeral));
         level = 0;
-    }
+    }*/
 }

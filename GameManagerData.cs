@@ -12,7 +12,6 @@ public class GameManagerData
     public GameManagerData(GameManager gameManager)
     {
         coinsInternal = gameManager.coinsInternal;
-        ptcCoinsCountInternal = gameManager.ptcCoinsCountInternal;
         levelGerAux = gameManager.levelGerAux;
     }
 }
